@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 
+
 #creating window
 window = tk.Tk()
 
@@ -42,7 +43,7 @@ def open_add_customer_form():
 title = tk.Label(
     canvas,
     text="Book Ordering System",
-    font=("Arial", 20, "bold"),
+    font=("Arial", 28, "bold"),
     bg="#f5e6c8"
 )
 title.pack(padx=40, pady=50)
