@@ -6,7 +6,7 @@ class Person:
     def __init__(self, firstName, lastName, email):
         self._firstName = firstName
         self._lastName = lastName
-        self.__email = email
+        self._email = email
 
 
 class Customer(Person):
@@ -18,39 +18,53 @@ class Customer(Person):
     def checkFileExists(self, filepath):
         return os.path.isfile(filepath)
     
-    
-    @property
-    def fname(self):
-        return self._fname
-
-    @fname.setter
-    def fname(self, value):
-        self._fname = value
-
 
     @property
-    def sname(self):
-        return self._sname
+    def userID(self):
+        return self.__customerID
 
-    @sname.setter
-    def sname(self, value):
-        self._sname = value
+    @userID.setter
+    def userID(self, value):
+        self.__customerID= value
 
+    def nextID(self, filepath):
+        if self.checkFileExists(filepath) == True:
+            with open(filepath, 'rb') as f:
+                loaded_customers = pickle.load(f)
+        
+        return loaded_customers
 
-    @property
-    def email(self):
-        return self._email
-
-    @email.setter
-    def email(self, value):
-        self._email = value
-
-
-    @property
-    def customerid(self):
-        return self._customerid
 
     def createUser(self):
+        user = {
+            "ID":self.nextID(),
+            'first_name': self._firstName,
+            'last_name': self._lastName,
+            'email': self._email
+        }
+
+
+        if self.checkFileExists('customers.pkl') == True:
+            with open('customers.pkl', 'rb') as f:
+                data = pickle.load(f)
+        else:
+            data = []
+
+        data.append(user)
+
+        with open('customers.pkl', 'wb') as f:
+            pickle.dump(data, f)
         
-        if self.checkFileExists() != True:
-            
+
+# fname = input("Enter fname: ") 
+# lname = input("Enter lname: ")
+# email = input("Enter email: ")
+
+# user1 = Customer(fname, lname, email)
+# user1.createUser()
+
+
+# with open('customers.pkl', 'rb') as f:
+#      user_from_file = pickle.load(f)
+
+# print(user_from_file)
