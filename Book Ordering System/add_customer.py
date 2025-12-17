@@ -13,31 +13,35 @@ class Customer(Person):
 
     def __init__(self, firstName, lastName, email):
         super().__init__(firstName, lastName, email)
-        self.__customerID = 0
+        self.__customerID = self.nextID("customers.pkl")
 
     def checkFileExists(self, filepath):
         return os.path.isfile(filepath)
     
 
-    @property
-    def userID(self):
-        return self.__customerID
-
-    @userID.setter
-    def userID(self, value):
-        self.__customerID= value
-
     def nextID(self, filepath):
-        if self.checkFileExists(filepath) == True:
+        if self.checkFileExists(filepath):
             with open(filepath, 'rb') as f:
                 loaded_customers = pickle.load(f)
-        
-        return loaded_customers
 
+                if loaded_customers:
+
+
+                    # Get last customer
+                    last_customer = loaded_customers[-1]
+
+                    # If it's a dict
+                    if isinstance(last_customer, dict):
+                        return last_customer["ID"] + 1
+                    else:
+                        return last_customer.ID + 1
+
+        # If file doesn't exist or is empty
+        return 0
 
     def createUser(self):
         user = {
-            "ID":self.nextID(),
+            "ID": self.__customerID,
             'first_name': self._firstName,
             'last_name': self._lastName,
             'email': self._email
@@ -56,15 +60,16 @@ class Customer(Person):
             pickle.dump(data, f)
         
 
-# fname = input("Enter fname: ") 
-# lname = input("Enter lname: ")
-# email = input("Enter email: ")
+fname = input("Enter fname: ") 
+lname = input("Enter lname: ")
+email = input("Enter email: ")
 
-# user1 = Customer(fname, lname, email)
-# user1.createUser()
+user1 = Customer(fname, lname, email)
+user1.createUser()
 
 
-# with open('customers.pkl', 'rb') as f:
-#      user_from_file = pickle.load(f)
+with open('customers.pkl', 'rb') as f:
+     user_from_file = pickle.load(f)
 
-# print(user_from_file)
+for user in user_from_file:
+    print(f"ID: {user["ID"]}, First name: {user["first_name"]}, Last Name: {user["last_name"]}, Email: {user["email"]}")

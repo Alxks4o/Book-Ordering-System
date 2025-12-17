@@ -101,12 +101,58 @@ home.grid(row=0, column=0, sticky='nsew')
 
 tk.Label(home, text="Welcome to Book Management", font="Arial, 20", bg="#f5e6c8").pack(padx=100, pady=40, anchor='center', expand=True)
 
-
 addCustomer = tk.Frame(main, bg="#f5e6c8")
-addCustomer.grid(row=0, column=0, sticky='nsew')
+addCustomer.grid(row=0, column=0, sticky="nsew")
 
-tk.Label(addCustomer, text="Add Customer", font="Arial, 20", bg="#f5e6c8").pack(padx=100, pady=40, anchor='center', expand=True)
+# Title
+tk.Label(
+    addCustomer,
+    text="Add Customer",
+    font=("Arial", 20),
+    bg="#f5e6c8"
+).grid(row=0, column=0, columnspan=2, pady=(40, 20))
 
+# First Name
+tk.Label(
+    addCustomer,
+    text="First Name",
+    font=("Arial", 15),
+    bg="#f5e6c8"
+).grid(row=1, column=0, sticky="w", padx=50, pady=10)
+
+first_name_entry = tk.Entry(addCustomer, font=("Arial", 15))
+first_name_entry.grid(row=2, column=0, padx=50, pady=10)
+
+# Last Name
+tk.Label(
+    addCustomer,
+    text="Last Name",
+    font=("Arial", 15),
+    bg="#f5e6c8"
+).grid(row=3, column=0, sticky="w", padx=50, pady=10)
+
+last_name_entry = tk.Entry(addCustomer, font=("Arial", 15))
+last_name_entry.grid(row=4, column=0, padx=50, pady=10)
+
+# Email
+tk.Label(
+    addCustomer,
+    text="Email",
+    font=("Arial", 15),
+    bg="#f5e6c8"
+).grid(row=5, column=0, sticky="w", padx=50, pady=10)
+
+email_entry = tk.Entry(addCustomer, font=("Arial", 15))
+email_entry.grid(row=6, column=0, padx=50, pady=10)
+
+# Submit button
+submit_btn = tk.Button(
+    addCustomer,
+    text="Add Customer",
+    font=("Arial", 15),
+    command=lambda: print("Saving customer…")
+)
+submit_btn.grid(row=7, column=0, columnspan=2, pady=30)
 
 
 addBook = tk.Frame(main, bg="#f5e6c8")
@@ -138,6 +184,6 @@ tk.Label(searchInvoices, text="Search Invoices", font="Arial, 20", bg="#f5e6c8")
 
 
 
-showFrame(home)
+showFrame(addCustomer)
 
 window.mainloop()
