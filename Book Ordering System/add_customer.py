@@ -55,21 +55,22 @@ class Customer(Person):
             data = []
 
         data.append(user)
-
         with open('customers.pkl', 'wb') as f:
             pickle.dump(data, f)
-        
 
-fname = input("Enter fname: ") 
-lname = input("Enter lname: ")
-email = input("Enter email: ")
-
-user1 = Customer(fname, lname, email)
-user1.createUser()
+        return "User created successfully!"
 
 
-with open('customers.pkl', 'rb') as f:
-     user_from_file = pickle.load(f)
+# fname = input("Enter fname: ") 
+# lname = input("Enter lname: ")
+# email = input("Enter email: ")
 
-for user in user_from_file:
-    print(f"ID: {user["ID"]}, First name: {user["first_name"]}, Last Name: {user["last_name"]}, Email: {user["email"]}")
+# user1 = Customer(fname, lname, email)
+# user1.createUser()
+
+
+# with open('customers.pkl', 'rb') as f:
+#      user_from_file = pickle.load(f)
+
+# for user in user_from_file:
+#     print(f"ID: {user["ID"]}, First name: {user["first_name"]}, Last Name: {user["last_name"]}, Email: {user["email"]}")
