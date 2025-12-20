@@ -1,6 +1,8 @@
 import tkinter as tk
 from backend.add_customer import Customer
 import pages.AddCustomerPage as AddCustomer
+import pages.Homepage as Homepage
+
 
 def showFrame(frame):
     frame.tkraise()
@@ -97,10 +99,9 @@ main = tk.Frame(window, bg="#f5e6c8")
 main.grid(row=0, column=1, sticky='nsew')
 
 
-home = tk.Frame(main, bg="#f5e6c8")
+home = Homepage.HomePage(main)
 home.grid(row=0, column=0, sticky='nsew')
 
-tk.Label(home, text="Welcome to Book Management", font="Arial, 20", bg="#f5e6c8").pack(padx=100, pady=40, anchor='center', expand=True)
 
 addCustomer = AddCustomer.AddCustomerPage(main)
 addCustomer.grid(row=0, column=0, sticky="nsew")
