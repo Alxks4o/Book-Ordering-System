@@ -4,21 +4,64 @@ import pickle
 
 class Person:
     
-    def __init__(self, firstName, lastName, email):
+    def __init__(self, firstName, lastName, email, address):
         self._firstName = firstName
         self._lastName = lastName
         self._email = email
+        self._address = address
+
+
+    @property
+    def firstName(self):
+        return self._firstName
+    
+    @firstName.setter
+    def firstName(self, firstName):
+        self._firstName = firstName.strip()
+
+    @property
+    def lastName(self):
+        return self._lastName
+    
+    @lastName.setter
+    def lastName(self, lastName):
+        self._lastName = lastName.strip()
+
+    @property
+    def email(self):
+        return self._email
+    
+    @email.setter
+    def email(self, email):
+        self._email = email.strip()
+
+    @property
+    def address(self):
+        return self._address
+    
+    @address.setter
+    def address(self, address):
+        self._address = address.strip()
 
 
 class Customer(Person):
 
-    def __init__(self, firstName, lastName, email):
-        super().__init__(firstName, lastName, email)
+    def __init__(self, firstName, lastName, email, address):
+        super().__init__(firstName, lastName, email, address)
 
+        # Setting up the file path for storing customer data
         base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
-        self.file_path = os.path.join(base_dir, "data", "customers.pkl")
+        self.file_path = os.path.join(base_dir, "data", "customers.pkl") # data file path
 
-        self.__customerID = self.nextID()
+        self.__customerID = self.nextID() # Assigning a unique customer ID
+    
+    @property
+    def customerID(self):
+        return self.__customerID
+    
+    @customerID.setter
+    def customerID(self, customerID):
+        self.__customerID = customerID
         
 
     def checkFileExists(self):
@@ -37,14 +80,15 @@ class Customer(Person):
             user_from_file = pickle.load(f)
 
         for user in user_from_file:
-            print(f"ID: {user["ID"]}, First name: {user["first_name"]}, Last Name: {user["last_name"]}, Email: {user["email"]}")
+            print(f"ID: {user["ID"]}, First name: {user["first_name"]}, Last Name: {user["last_name"]}, Email: {user["email"]}, Address: {user["address"]}")
 
     def createUser(self):
         user = {
-            "ID": self.__customerID,
-            "first_name": self._firstName,
-            "last_name": self._lastName,
-            "email": self._email
+            "ID": self.customerID,
+            "first_name": self.firstName,
+            "last_name": self.lastName,
+            "email": self.email,
+            "address": self.address
         }
 
         if self.checkFileExists():
@@ -67,16 +111,15 @@ class Customer(Person):
 # fname = input("Enter fname: ") 
 # lname = input("Enter lname: ")
 # email = input("Enter email: ")
+# address = input("Enter address: ")
 
-# user1 = Customer(fname, lname, email)
+# user1 = Customer(fname, lname, email, address)
 # user1.createUser()
 
 
-# with open(, 'rb') as f:
+# with open(user1.file_path, 'rb') as f:
 #      user_from_file = pickle.load(f)
 
 # for user in user_from_file:
 #     print(f"ID: {user["ID"]}, First name: {user["first_name"]}, Last Name: {user["last_name"]}, Email: {user["email"]}")
-
-customer = Customer(" "," "," ")
-customer.read_file()
+#     print(f"Address: {user["address"]}")

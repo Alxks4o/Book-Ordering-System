@@ -29,32 +29,41 @@ class AddCustomerPage(tk.Frame):
         self.email_entry = tk.Entry(self, font=("Arial", 15))
         self.email_entry.grid(row=6, column=0, padx=50, pady=10)
 
+        # Address Label
+        tk.Label(self, text="Address", font=("Arial", 15), bg="#f5e6c8")\
+            .grid(row=7, column=0, sticky="w", padx=50, pady=10)
+
+        self.address_entry = tk.Entry(self, font=("Arial", 15))
+        self.address_entry.grid(row=8, column=0, padx=50, pady=10)
+
         # Message Label
         self.message_label = tk.Label(self, text="", font=("Arial", 12), bg="#f5e6c8")
-        self.message_label.grid(row=7, column=0, columnspan=2, pady=10)
+        self.message_label.grid(row=9, column=0, columnspan=2, pady=10)
 
         # Buttons
         tk.Button(self, text="Add Customer", font=("Arial", 15), command=self.addCustomerFunc)\
-            .grid(row=8, column=0, sticky="nws", padx=50, pady=20)
+            .grid(row=10, column=0, sticky="nws", padx=50, pady=20)
 
         tk.Button(self, text="Clear", font=("Arial", 15), command=self.clearEntries)\
-            .grid(row=8, column=0, sticky="nes", padx=50, pady=20)
+            .grid(row=10, column=0, sticky="nes", padx=50, pady=20)
 
     def clearEntries(self):
         self.first_name_entry.delete(0, tk.END)
         self.last_name_entry.delete(0, tk.END)
         self.email_entry.delete(0, tk.END)
+        self.address_entry.delete(0, tk.END)
 
     def addCustomerFunc(self):
         firstName = self.first_name_entry.get().strip()
         lastName = self.last_name_entry.get().strip()
         email = self.email_entry.get().strip()
+        address = self.address_entry.get().strip()
 
         if not firstName or not lastName or not email:
             self.message_label.config(text="All fields are required.", fg="red")
             return
 
-        user = Customer(firstName, lastName, email)
+        user = Customer(firstName, lastName, email, address)
         user.createUser()
 
         self.message_label.config(text="Customer added successfully!", fg="green")

@@ -1,9 +1,17 @@
 import tkinter as tk
+
+#importing backend modules
 from backend.add_customer import Customer
+
+#importing pages
 import pages.AddCustomerPage as AddCustomer
-import pages.Homepage as Homepage
+import pages.Homepage as HomepageFunc
+import pages.PlaceOrderPage as PlaceOrderFunc
+import pages.ViewInvoices as ViewInvoicesFunc
+import pages.SearchInvoices as SearchInvoicesFunc
+import pages.AddBookPage as AddBookPage
 
-
+# Function to switch frames
 def showFrame(frame):
     frame.tkraise()
 
@@ -11,17 +19,19 @@ def showFrame(frame):
 window = tk.Tk()
 
 #setting window size
-window.geometry("800x500")
-window.minsize(800, 600)
+window.geometry("900x600")
+window.minsize(900, 600)
 
+#setting window grid configuration
 window.rowconfigure(0, weight=1)
 window.columnconfigure(1, weight=1)
 
 
 '''
-NAVIGATION
+NAVIGATION - This is where the navigation buttons will go
 '''
 
+#navigation frame
 navigation = tk.Frame(window, bg='#ffe9d6')
 navigation.grid(row=0, column=0, sticky='ns')
 
@@ -91,51 +101,42 @@ searchInvoicesButton = tk.Button(
 
 
 '''
-FRAMES
+FRAMES - This is where the content of each page will go
 '''
 
-#Dashboard buttons frame
+#Dashboard window frame
 main = tk.Frame(window, bg="#f5e6c8")
 main.grid(row=0, column=1, sticky='nsew')
 
 
-home = Homepage.HomePage(main)
+#home page frame
+home = HomepageFunc.HomePage(main)
 home.grid(row=0, column=0, sticky='nsew')
 
-
+#add customer page frame
 addCustomer = AddCustomer.AddCustomerPage(main)
 addCustomer.grid(row=0, column=0, sticky="nsew")
 
-
-addBook = tk.Frame(main, bg="#f5e6c8")
+#add book page frame
+addBook = AddBookPage.AddBookPage(main)
 addBook.grid(row=0, column=0, sticky='nsew')
 
-tk.Label(addBook, text="Add Book", font="Arial, 20", bg="#f5e6c8").pack(padx=100, pady=40, anchor='center', expand=True)
-
-
-
-placeOrder = tk.Frame(main, bg="#f5e6c8")
+#place order page frame
+placeOrder = PlaceOrderFunc.PlaceOrderPage(main)
 placeOrder.grid(row=0, column=0, sticky='nsew')
 
-tk.Label(placeOrder, text="Place Order", font="Arial, 20", bg="#f5e6c8").pack(padx=100, pady=40, anchor='center', expand=True)
-
-
-
-
-viewInvoices = tk.Frame(main, bg="#f5e6c8")
+#view invoices page frame
+viewInvoices = ViewInvoicesFunc.ViewInvoices(main)
 viewInvoices.grid(row=0, column=0, sticky='nsew')
 
-tk.Label(viewInvoices, text="View Invoices", font="Arial, 20", bg="#f5e6c8").pack(padx=100, pady=40, anchor='center', expand=True)
-
-
-
-searchInvoices = tk.Frame(main, bg="#f5e6c8")
+#search invoices page frame
+searchInvoices = SearchInvoicesFunc.SearchInvoices(main)
 searchInvoices.grid(row=0, column=0, sticky='nsew')
 
-tk.Label( searchInvoices, text="Search Invoices", font="Arial, 20", bg="#f5e6c8").pack(padx=100, pady=40, anchor='center', expand=True)
+
+#show home page by default
+showFrame(home)
 
 
-
-showFrame(addCustomer)
-
+#running the window
 window.mainloop()
