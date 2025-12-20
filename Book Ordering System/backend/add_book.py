@@ -2,25 +2,76 @@ import os
 import pickle 
 
 
-class Book:
+class Stock:
     
-    def __init__(self, title, author, isbn, genre, price):
+    def __init__(self, title, author, isbn,price):
         self._title = title
         self._author = author
         self._isbn = isbn
-        self._genre = genre
+        self._price = price
+
+    @property
+    def title(self):
+        return self._title
+    
+    @title.setter
+    def title(self, title):
+        self._title = title.strip()
+
+    @property
+    def author(self):
+        return self._author
+    
+    @author.setter
+    def author(self, author):
+        self._author = author.strip()
+    
+    @property
+    def isbn(self):
+        return self._isbn
+    
+    @isbn.setter
+    def isbn(self, isbn):
+        self._isbn = isbn.strip()
+
+    @property
+    def price(self):
+        return self._price
+    
+    @price.setter
+    def price(self, price):
         self._price = price
     
-class Customer(Person):
 
-    def __init__(self, firstName, lastName, email):
-        super().__init__(firstName, lastName, email)
+
+class Book(Stock):
+
+    def __init__(self, title, author, isbn, price, quantity):
+        super().__init__(title, author, isbn, price)
 
         base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
-        self.file_path = os.path.join(base_dir, "data", "customers.pkl")
+        self.file_path = os.path.join(base_dir, "data", "books.pkl")
 
-        self.__customerID = self.nextID()
-        
+        self.__bookID = self.nextID()
+        self.__quantity = quantity
+
+
+    @property
+    def bookID(self):
+        return self.__bookID
+    
+    @bookID.setter
+    def bookID(self, bookID):
+        self.__bookID = bookID
+
+    @property
+    def quantity(self):
+        return self.__quantity
+    
+    @quantity.setter
+    def quantity(self, quantity):
+        self.__quantity = quantity
+
 
     def checkFileExists(self):
         return os.path.isfile(self.file_path)
@@ -28,24 +79,20 @@ class Customer(Person):
     def nextID(self):
         if self.checkFileExists():
             with open(self.file_path, "rb") as f:
-                customers = pickle.load(f)
-                if customers:
-                    return customers[-1]["ID"] + 1
+                book = pickle.load(f)
+                if book:
+                    return book[-1]["ID"] + 1
         return 0
 
-    def read_file(self):
-        with open(self.file_path, 'rb') as f:
-            user_from_file = pickle.load(f)
 
-        for user in user_from_file:
-            print(f"ID: {user["ID"]}, First name: {user["first_name"]}, Last Name: {user["last_name"]}, Email: {user["email"]}")
-
-    def createUser(self):
-        user = {
-            "ID": self.__customerID,
-            "first_name": self._firstName,
-            "last_name": self._lastName,
-            "email": self._email
+    def createBook(self):
+        book = {
+            "ID": self.bookID,
+            "title": self.title,
+            "author": self.author,
+            "isbn": self.isbn,
+            "price": self.price,
+            "quantity": self.quantity
         }
 
         if self.checkFileExists():
@@ -54,27 +101,29 @@ class Customer(Person):
         else:
             data = []
 
-        data.append(user)
+        data.append(book)
 
         with open(self.file_path, "wb") as f:
             pickle.dump(data, f)
 
-        return "User created successfully!"
+        return "Book added successfully!"
 
 
 
 # TESTING 
 
-# fname = input("Enter fname: ") 
-# lname = input("Enter lname: ")
-# email = input("Enter email: ")
+title = input("Enter title: ") 
+author = input("Enter author: ")
+isbn = input("Enter isbn: ")
+price = float(input("Enter price: "))
+quantity = int(input("Enter quantity: "))
 
-# user1 = Customer(fname, lname, email)
-# user1.createUser()
+book1 = Book(title, author, isbn, price, quantity)
+book1.createBook()
 
 
-# with open(, 'rb') as f:
-#      user_from_file = pickle.load(f)
+with open(book1.file_path, 'rb') as f:
+     book_from_file = pickle.load(f)
 
-# for user in user_from_file:
-#     print(f"ID: {user["ID"]}, First name: {user["first_name"]}, Last Name: {user["last_name"]}, Email: {user["email"]}")
+for book in book_from_file:
+    print(f"ID: {book["ID"]}, Title: {book["title"]}, Author: {book["author"]}, ISBN: {book["isbn"]}, Price: {book["price"]}, Quantity: {book["quantity"]}")
