@@ -1,16 +1,21 @@
+
+#importing necessary modules
 import os
 import pickle 
 
-
+'''
+Person Class - parent class for Customer class which holds common attributes for a person
+'''
 class Person:
     
+    #setting up attributes
     def __init__(self, firstName, lastName, email, address):
-        self._firstName = firstName
-        self._lastName = lastName
-        self._email = email
-        self._address = address
+        self.firstName = firstName
+        self.lastName = lastName
+        self.email = email
+        self.address = address
 
-
+    #Getters and Setters - to access and modify protected attributes
     @property
     def firstName(self):
         return self._firstName
@@ -44,8 +49,13 @@ class Person:
         self._address = address.strip()
 
 
+'''
+Customer Class - child class of Person, represents a customer in the system
+'''
+
 class Customer(Person):
 
+    #setting up attributes
     def __init__(self, firstName, lastName, email, address):
         super().__init__(firstName, lastName, email, address)
 
@@ -55,6 +65,8 @@ class Customer(Person):
 
         self.__customerID = self.nextID() # Assigning a unique customer ID
     
+
+    #Getters and Setters - to access and modify private attributes
     @property
     def customerID(self):
         return self.__customerID
@@ -63,10 +75,11 @@ class Customer(Person):
     def customerID(self, customerID):
         self.__customerID = customerID
         
-
+    #helper method to check if the data file exists
     def checkFileExists(self):
         return os.path.isfile(self.file_path)
 
+    #method to generate the next unique customer ID
     def nextID(self):
         if self.checkFileExists():
             with open(self.file_path, "rb") as f:
@@ -74,15 +87,23 @@ class Customer(Person):
                 if customers:
                     return customers[-1]["ID"] + 1
         return 0
+    
+    def checkEmailExists(self):
+        if self.checkFileExists():
+            with open(self.file_path, "rb") as f:
+                customers = pickle.load(f)
+                for customer in customers:
+                    if customer["email"].lower() == self.email.lower():
+                        return True
+        return False
 
-    def read_file(self):
-        with open(self.file_path, 'rb') as f:
-            user_from_file = pickle.load(f)
 
-        for user in user_from_file:
-            print(f"ID: {user["ID"]}, First name: {user["first_name"]}, Last Name: {user["last_name"]}, Email: {user["email"]}, Address: {user["address"]}")
-
+    #method to create and save a new customer record
     def createUser(self):
+        
+        if self.checkEmailExists():
+            return "Email already exists"
+        
         user = {
             "ID": self.customerID,
             "first_name": self.firstName,
@@ -102,7 +123,7 @@ class Customer(Person):
         with open(self.file_path, "wb") as f:
             pickle.dump(data, f)
 
-        return "User created successfully!"
+        return "Customer added successfully!"
 
 
 

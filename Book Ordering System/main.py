@@ -4,12 +4,11 @@ import tkinter as tk
 from backend.add_customer import Customer
 
 #importing pages
-import pages.AddCustomerPage as AddCustomer
+import pages.AddPage as AddCustomer
 import pages.Homepage as HomepageFunc
 import pages.PlaceOrderPage as PlaceOrderFunc
 import pages.ViewInvoices as ViewInvoicesFunc
 import pages.SearchInvoices as SearchInvoicesFunc
-import pages.AddBookPage as AddBookPage
 
 # Function to switch frames
 def showFrame(frame):
@@ -19,8 +18,8 @@ def showFrame(frame):
 window = tk.Tk()
 
 #setting window size
-window.geometry("900x600")
-window.minsize(900, 600)
+window.geometry("1000x900")
+window.minsize(1000, 900)
 
 #setting window grid configuration
 window.rowconfigure(0, weight=1)
@@ -58,17 +57,8 @@ homeButton = tk.Button(
 addCustomerButton = tk.Button(
     navigation,
     **button_style,
-    text= "Add Customer",
-    command=lambda: showFrame(addCustomer)
-).pack(fill='x')
-
-
-#button for adding books
-addBookButton = tk.Button(
-    navigation,
-    **button_style,
-    text= "Add Book",
-    command=lambda: showFrame(addBook)
+    text= "Add",
+    command=lambda: showFrame(add)
 ).pack(fill='x')
 
 
@@ -105,7 +95,7 @@ FRAMES - This is where the content of each page will go
 '''
 
 #Dashboard window frame
-main = tk.Frame(window, bg="#f5e6c8")
+main = tk.Frame(window, bg="#e9bb8d")
 main.grid(row=0, column=1, sticky='nsew')
 
 
@@ -113,21 +103,21 @@ main.grid(row=0, column=1, sticky='nsew')
 home = HomepageFunc.HomePage(main)
 home.grid(row=0, column=0, sticky='nsew')
 
-#add customer page frame
-addCustomer = AddCustomer.AddCustomerPage(main)
-addCustomer.grid(row=0, column=0, sticky="nsew")
 
-#add book page frame
-addBook = AddBookPage.AddBookPage(main)
-addBook.grid(row=0, column=0, sticky='nsew')
+#add customer page frame
+add = AddCustomer.AddPage(main)
+add.grid(row=0, column=0, sticky="nsew")
+
 
 #place order page frame
 placeOrder = PlaceOrderFunc.PlaceOrderPage(main)
 placeOrder.grid(row=0, column=0, sticky='nsew')
 
+
 #view invoices page frame
 viewInvoices = ViewInvoicesFunc.ViewInvoices(main)
 viewInvoices.grid(row=0, column=0, sticky='nsew')
+
 
 #search invoices page frame
 searchInvoices = SearchInvoicesFunc.SearchInvoices(main)
@@ -135,7 +125,7 @@ searchInvoices.grid(row=0, column=0, sticky='nsew')
 
 
 #show home page by default
-showFrame(home)
+showFrame(add)
 
 
 #running the window
