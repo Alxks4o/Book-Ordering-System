@@ -1,7 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
+
+#importing backend modules
 from backend.add_customer import Customer
 from backend.add_book import Book
+
+'''
+PAGE FOR ADDING CUSTOMERS AND BOOKS
+'''
 
 class AddPage(tk.Frame):
     def __init__(self, parent):
@@ -18,6 +24,7 @@ class AddPage(tk.Frame):
             foreground=[('selected', 'black')]                  
                   )  
         
+        # Creating the notebook (tabbed interface)
         notebook = ttk.Notebook(self)
         notebook.pack(fill='both', expand=True)
 
@@ -136,46 +143,56 @@ class AddPage(tk.Frame):
         tk.Button(add_book_tab, text="Clear", font=("Arial", 15), command=self.clearEntries)\
             .grid(row=12, column=0, sticky="nes", padx=50, pady=20)
 
+    # Function for the clear button
     def clearEntries(self, *args):
         for widget in self.winfo_children():
             if isinstance(widget, tk.Entry):
                 widget.delete(0, tk.END)
 
+    # Function for adding books
     def addBookFunc(self):
+        # getting user input from entry fields
         title = self.title_entry.get().strip()
         author = self.author_entry.get().strip()
         isbn = self.isbn_entry.get().strip()
         price = self.price_entry.get().strip()
         quantity = self.quantity_entry.get().strip()
 
+        #validation for empty fields
         if not title or not author or not isbn or not price or not quantity:
             self.message_label_book.config(text="All fields are required.", fg="red")
             return
         
+        #create book object
         book = Book(title, author, isbn, price, quantity)
         book.createBook()
 
+        # displaying messages based on success or failure
         if book.createBook() != "Book added successfully!":
             self.message_label_book.config(text=book.createBook(), fg="red")
         else:
             self.message_label_book.config(text=book.createBook(), fg="green")
             self.clearEntries(title, author, isbn, price, quantity)
 
-
+    # Function for adding customers
     def addCustomerFunc(self):
+        # getting user input from entry fields
         firstName = self.first_name_entry.get().strip()
         lastName = self.last_name_entry.get().strip()
         email = self.email_entry.get().strip()
         address = self.address_entry.get().strip()
 
+        #validation for empty fields
         if not firstName or not lastName or not email or not address:
             self.message_label_user.config(text="All fields are required.", fg="red")
             return
+        
 
+        #create customer object
         user = Customer(firstName, lastName, email, address)
         user.createUser()
-        print(user.createUser())
 
+        # displaying messages based on success or failure
         if user.createUser() != "Customer added successfully!":
             self.message_label_user.config(text=user.createUser(), fg="red")
         else:

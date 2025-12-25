@@ -125,7 +125,7 @@ searchInvoices.grid(row=0, column=0, sticky='nsew')
 
 
 #show home page by default
-showFrame(add)
+showFrame(placeOrder)
 
 
 #running the window
