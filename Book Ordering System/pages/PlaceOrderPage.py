@@ -123,17 +123,23 @@ class PlaceOrderPage(tk.Frame):
             book_author = book_vals[2]
             quantity = int(qty_text)
 
+            book_price = 0
+            for book in books:
+                if book["ID"] == book_id:
+                    book_price = book["price"]
+                    break
+
             # print(book_vals)
             # print(cust_vals)
             orderObj = Order(book_id, customer_id, customer_firstname, customer_lastname, book_title, book_author, email, quantity)
-            orderObj.calculateTotalPrice(orderObj.getBookPrice()) 
+            orderObj.calculateTotalPrice(book_price) 
             result = orderObj.placeOrder()
 
             if result == "Order placed successfully!":
                 print(result)
                 # tk.messagebox.showinfo("Success", result)
             else:
-                tk.messagebox.showerror("Error", result)
+                # tk.messagebox.showerror("Error", result)
                 print("Error placing order.")
 
             quantity_entry.delete(0, tk.END)

@@ -47,13 +47,13 @@ class Order:
     def customer_id(self, customer_id):
         self.__customer_id = customer_id
 
-    #method to generate the next unique book ID
+    #method to generate the next unique order ID
     def nextID(self):
         if self.checkFileExists():
             with open(self.file_path, "rb") as f:
-                book = pickle.load(f)
-                if book:
-                    return book[-1]["ID"] + 1
+                order = pickle.load(f)
+                if order:
+                    return order[-1]["order_id"] + 1
         return 0
 
     #helper method to check if the data file exists
@@ -61,19 +61,17 @@ class Order:
         return os.path.isfile(self.file_path)
 
     def calculateTotalPrice(self, unit_price):
-        unit_price = self.getBookPrice()
+        price = unit_price
         quantity = int(self._quantity)
-        self._total_price = unit_price * quantity
+        self._total_price = price * quantity
         
     
-    
-    def getBookPrice(self):
+    def getOrders(self):
         if self.checkFileExists():
             with open(self.file_path, "rb") as f:
-                books = pickle.load(f)
-                for book in books:
-                    if book["ID"] == self.__book_id:
-                        return book["price"]
+                orders = pickle.load(f)
+                return orders
+        return []
 
     def placeOrder(self):
         order = {
@@ -98,7 +96,10 @@ class Order:
         with open(self.file_path, "wb") as f:
             pickle.dump(data, f)
         
+        print(self.getOrders())
         return "Order placed successfully!"
+    
+
 
 
 
