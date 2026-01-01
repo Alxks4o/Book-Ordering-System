@@ -101,6 +101,13 @@ class Book(Stock):
                     return book[-1]["ID"] + 1
         return 0
 
+    def getBooks(self):
+        if self.checkFileExists():
+            with open(self.file_path, "rb") as f:
+                books = pickle.load(f)
+                return books
+        return []
+
     #method to create and save a new book record
     def createBook(self):
         data_valid = False

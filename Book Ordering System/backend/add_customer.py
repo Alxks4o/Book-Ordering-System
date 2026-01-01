@@ -88,6 +88,13 @@ class Customer(Person):
                     return customers[-1]["ID"] + 1
         return 0
     
+    def getCustomers(self):
+        if self.checkFileExists():
+            with open(self.file_path, "rb") as f:
+                customers = pickle.load(f)
+                return customers
+        return []
+
     def checkEmailExists(self):
         if self.checkFileExists():
             with open(self.file_path, "rb") as f:

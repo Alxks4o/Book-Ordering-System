@@ -80,7 +80,7 @@ class AddPage(tk.Frame):
         tk.Button(add_customer_tab, text="Add Customer", font=("Arial", 15), command=self.addCustomerFunc)\
             .grid(row=10, column=0, sticky="nws", padx=50, pady=20)
 
-        tk.Button(add_customer_tab, text="Clear", font=("Arial", 15), command=self.clearEntries)\
+        tk.Button(add_customer_tab, text="Clear", font=("Arial", 15), command=self.clearCustomerEntries)\
             .grid(row=10, column=0, sticky="nes", padx=50, pady=20)
 
 
@@ -140,62 +140,70 @@ class AddPage(tk.Frame):
         # Buttons
         tk.Button(add_book_tab, text="Add Book", font=("Arial", 15), command=self.addBookFunc)\
             .grid(row=12, column=0, sticky="nws", padx=50, pady=20)
-        tk.Button(add_book_tab, text="Clear", font=("Arial", 15), command=self.clearEntries)\
+        tk.Button(add_book_tab, text="Clear", font=("Arial", 15), command=self.clearBookEntries)\
             .grid(row=12, column=0, sticky="nes", padx=50, pady=20)
 
-    # Function for the clear button
-    def clearEntries(self, *args):
-        for widget in self.winfo_children():
-            if isinstance(widget, tk.Entry):
-                widget.delete(0, tk.END)
+
+    def clearCustomerEntries(self):
+        self.first_name_entry.delete(0, tk.END)
+        self.last_name_entry.delete(0, tk.END)
+        self.email_entry.delete(0, tk.END)
+        self.address_entry.delete(0, tk.END)
+
+    def clearBookEntries(self):
+        self.title_entry.delete(0, tk.END)
+        self.author_entry.delete(0, tk.END)
+        self.isbn_entry.delete(0, tk.END)
+        self.price_entry.delete(0, tk.END)
+        self.quantity_entry.delete(0, tk.END)
+    
+
 
     # Function for adding books
+ 
     def addBookFunc(self):
-        # getting user input from entry fields
         title = self.title_entry.get().strip()
         author = self.author_entry.get().strip()
         isbn = self.isbn_entry.get().strip()
         price = self.price_entry.get().strip()
         quantity = self.quantity_entry.get().strip()
 
-        #validation for empty fields
         if not title or not author or not isbn or not price or not quantity:
             self.message_label_book.config(text="All fields are required.", fg="red")
             return
-        
-        #create book object
-        book = Book(title, author, isbn, price, quantity)
-        book.createBook()
 
-        # displaying messages based on success or failure
-        if book.createBook() != "Book added successfully!":
-            self.message_label_book.config(text=book.createBook(), fg="red")
+        book = Book(title, author, isbn, price, quantity)
+
+        # CALL ONCE
+        result = book.createBook()
+
+        if result != "Book added successfully!":
+            self.message_label_book.config(text=result, fg="red")
         else:
-            self.message_label_book.config(text=book.createBook(), fg="green")
-            self.clearEntries(title, author, isbn, price, quantity)
+            self.message_label_book.config(text=result, fg="green")
+            self.clearBookEntries()
 
     # Function for adding customers
+    
     def addCustomerFunc(self):
-        # getting user input from entry fields
         firstName = self.first_name_entry.get().strip()
         lastName = self.last_name_entry.get().strip()
         email = self.email_entry.get().strip()
         address = self.address_entry.get().strip()
 
-        #validation for empty fields
         if not firstName or not lastName or not email or not address:
             self.message_label_user.config(text="All fields are required.", fg="red")
             return
-        
 
-        #create customer object
         user = Customer(firstName, lastName, email, address)
-        user.createUser()
 
-        # displaying messages based on success or failure
-        if user.createUser() != "Customer added successfully!":
-            self.message_label_user.config(text=user.createUser(), fg="red")
+        # CALL ONCE
+        result = user.createUser()
+
+        # DISPLAY MESSAGE BASED ON SINGLE RESULT
+        if result != "Customer added successfully!":
+            self.message_label_user.config(text=result, fg="red")
         else:
-            self.message_label_user.config(text=user.createUser(), fg="green")
-            self.clearEntries(firstName, lastName, email, address)
+            self.message_label_user.config(text=result, fg="green")
+            self.clearCustomerEntries()
             print("Customer added successfully!")
