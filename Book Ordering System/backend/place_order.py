@@ -96,7 +96,6 @@ class Order:
         with open(self.file_path, "wb") as f:
             pickle.dump(data, f)
         
-        print(self.getOrders())
         return "Order placed successfully!"
     
 

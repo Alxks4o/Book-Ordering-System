@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 
 #importing backend modules
 from backend.add_book import Book
@@ -96,6 +97,23 @@ class PlaceOrderPage(tk.Frame):
             full_name = f'{customer["first_name"]} {customer["last_name"]}'
             customers_tree.insert("", tk.END, values=(customer["ID"], full_name, customer["email"]))
 
+                    
+            def show_invoice(orderObj, first, last, title, author, qty):
+                win = tk.Toplevel()
+                win.title("Invoice")
+                win.geometry("500x400")  
+                win.configure(bg="#ececec")
+
+                tk.Label(win, text="Order Confirmation", font=("Arial", 18, "bold"), bg="#ececec").pack(pady=10)
+                tk.Label(win, text=(100*"-"), font=("Arial", 18, "bold"), bg="#ececec").pack(pady=10)
+                tk.Label(win, text=f"Order ID: {orderObj.order_id}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+                tk.Label(win, text=f"Customer: {first} {last}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+                tk.Label(win, text=f"Book: {title} — {author}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+                tk.Label(win, text=f"Quantity: {qty}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+                tk.Label(win, text=f"Total Price: £{orderObj._total_price:.2f}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+
+                tk.Button(win, text="OK", width=25, height=5, font=("Arial", 15), bg="#7b7b7b", command=win.destroy).pack(pady=50)
+
 
         # Place Order Button Functionality
         def place_order():
@@ -104,11 +122,11 @@ class PlaceOrderPage(tk.Frame):
             qty_text = quantity_entry.get().strip()
 
             if not book_sel or not cust_sel:
-                # tk.messagebox.showerror("Missing selection", "Please select a book and a customer.")
+                messagebox.showerror("Missing selection", "Please select a book and a customer.")
                 return
 
             if not qty_text.isdigit() or int(qty_text) <= 0:
-                # tk.messagebox.showerror("Invalid quantity", "Please enter a valid positive quantity.")
+                messagebox.showerror("Invalid quantity", "Please enter a valid positive quantity.")
                 return
 
             book_vals = books_tree.item(book_sel)["values"]
@@ -129,19 +147,15 @@ class PlaceOrderPage(tk.Frame):
                     book_price = book["price"]
                     break
 
-            # print(book_vals)
-            # print(cust_vals)
+
             orderObj = Order(book_id, customer_id, customer_firstname, customer_lastname, book_title, book_author, email, quantity)
             orderObj.calculateTotalPrice(book_price) 
             result = orderObj.placeOrder()
 
-            if result == "Order placed successfully!":
-                print(result)
-                # tk.messagebox.showinfo("Success", result)
-            else:
-                # tk.messagebox.showerror("Error", result)
-                print("Error placing order.")
 
+
+            if result == "Order placed successfully!":
+                show_invoice(orderObj, customer_firstname, customer_lastname, book_title, book_author, quantity)
             quantity_entry.delete(0, tk.END)
 
         place_order_button.configure(command=place_order)
