@@ -122,6 +122,9 @@ class Customer(Person):
         if self.checkFileExists():
             with open(self.file_path, "rb") as f:
                 data = pickle.load(f)
+
+            if not isinstance(data, list):
+                data = []
         else:
             data = []
 
