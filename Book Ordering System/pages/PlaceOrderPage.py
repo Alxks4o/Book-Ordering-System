@@ -30,16 +30,21 @@ class PlaceOrderPage(tk.Frame):
 
         books_tree = ttk.Treeview(
             books_frame,
-            columns=("id", "title", "author"),
+            columns=("id", "title", "author", "quantity"),
             show="headings",
             height=8
         )
+
         books_tree.heading("id", text="ID")
         books_tree.heading("title", text="Title")
         books_tree.heading("author", text="Author")
+        books_tree.heading("quantity", text="Quantity")
+
         books_tree.column("id", width=60, anchor="center")
         books_tree.column("title", width=220, anchor="w")
         books_tree.column("author", width=160, anchor="w")
+        books_tree.column("quantity", width=100, anchor="w")
+
         books_tree.grid(row=0, column=0, sticky="nsew")
 
         books_scroll = ttk.Scrollbar(books_frame, orient="vertical", command=books_tree.yview)
@@ -74,9 +79,11 @@ class PlaceOrderPage(tk.Frame):
         customers_tree.heading("id", text="ID")
         customers_tree.heading("name", text="Name")
         customers_tree.heading("email", text="Email")
+
         customers_tree.column("id", width=60, anchor="center")
         customers_tree.column("name", width=220, anchor="w")
         customers_tree.column("email", width=220, anchor="w")
+
         customers_tree.grid(row=0, column=0, sticky="nsew")
 
         customers_scroll = ttk.Scrollbar(customers_frame, orient="vertical", command=customers_tree.yview)
@@ -87,9 +94,13 @@ class PlaceOrderPage(tk.Frame):
         #Populating the book tables
         self.bookObj = Book("", "", "", 0, 0)
         books = self.bookObj.getBooks()
-        for book in books:
-            books_tree.insert("", tk.END, values=(book["ID"], book["title"], book["author"]))
+        try:
+            for book in books:
+                books_tree.insert("", tk.END, values=(book["ID"], book["title"], book["author"], book["quantity"]))
+        except:
+            pass
 
+        
         #Populating the customer table
         self.customerObj = Customer("", "", "", "")
         customers = self.customerObj.getCustomers()
@@ -143,7 +154,7 @@ class PlaceOrderPage(tk.Frame):
 
             book_price = 0
             for book in books:
-                if book["ID"] == book_id:
+                if book["ID"] == int(book_id):
                     book_price = book["price"]
                     break
 
@@ -156,6 +167,9 @@ class PlaceOrderPage(tk.Frame):
 
             if result == "Order placed successfully!":
                 show_invoice(orderObj, customer_firstname, customer_lastname, book_title, book_author, quantity)
+            elif result == "Order failed due to insufficient stock.":
+                messagebox.showerror("Insufficient Stock", "Order failed due to insufficient stock.")
+            
             quantity_entry.delete(0, tk.END)
 
         place_order_button.configure(command=place_order)
