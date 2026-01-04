@@ -94,19 +94,29 @@ class Book(Stock):
 
     #method to generate the next unique book ID
     def nextID(self):
-        if self.checkFileExists():
-            with open(self.file_path, "rb") as f:
-                book = pickle.load(f)
-                if book:
-                    return book[-1]["ID"] + 1
-        return 0
+        try:        
+            if self.checkFileExists():
+                with open(self.file_path, "rb") as f:
+                    book = pickle.load(f)
+                    if book:
+                        return book[-1]["ID"] + 1
+            return 0
+        except:
+            return 0
 
     def getBooks(self):
-        if self.checkFileExists():
+        if not self.checkFileExists():
+            return []
+        try:
             with open(self.file_path, "rb") as f:
                 books = pickle.load(f)
+            
+            if isinstance(books, list):
                 return books
-        return []
+            else:
+                return []
+        except Exception:
+            return []
 
     #method to create and save a new book record
     def createBook(self):

@@ -17,7 +17,7 @@ class PlaceOrderPage(tk.Frame):
 
 
         tk.Label(self, text="Place Order", font=("Arial", 25, "bold"), bg="#e9bb8d") \
-            .grid(row=0, column=0, columnspan=2, padx=30, pady=(40, 20))
+            .grid(row=0, column=0, columnspan=2, padx=30, pady=(40, 20), sticky='w')
 
 
         #Books Section
@@ -56,9 +56,25 @@ class PlaceOrderPage(tk.Frame):
 
         quantity_entry = tk.Entry(self, font=("Arial", 15), width=10)
         quantity_entry.grid(row=4, column=0, padx=30, pady=10, sticky='w')
+        
+        self.shipping_var = tk.BooleanVar(value=False)
+        shipping_checkbox= tk.Checkbutton(
+            self,
+            text="Shipping (+£5.00)",
+            font=("Arial", 12),
+            bg="#ffd3ad",
+            indicatoron=False,
+            width=18,
+            selectcolor="#94ff8a",
+            relief="raised",
+            variable=self.shipping_var,
+            onvalue=True,
+            offvalue=False
+        )
+        shipping_checkbox.grid(row=6, column=0, padx=30, pady=10, sticky='w')
 
         place_order_button = tk.Button(self, text="Place Order", font=("Arial", 15), bg="#ffd3ad", height=2, width=15)
-        place_order_button.grid(row=5, column=0, columnspan=2, pady=30, sticky="w", padx=30)
+        place_order_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=30)
 
         
 
@@ -108,22 +124,27 @@ class PlaceOrderPage(tk.Frame):
             full_name = f'{customer["first_name"]} {customer["last_name"]}'
             customers_tree.insert("", tk.END, values=(customer["ID"], full_name, customer["email"]))
 
-                    
-            def show_invoice(orderObj, first, last, title, author, qty):
-                win = tk.Toplevel()
-                win.title("Invoice")
-                win.geometry("500x400")  
-                win.configure(bg="#ececec")
+        # Function to show invoice in a new window
+        def show_invoice(orderObj, first, last, title, author, qty, use_shipping):
+            win = tk.Toplevel()
+            win.title("Invoice")
+            win.geometry("400x450")
+            win.resizable(False, False)
+            win.configure(bg="#ececec")
+            
 
-                tk.Label(win, text="Order Confirmation", font=("Arial", 18, "bold"), bg="#ececec").pack(pady=10)
-                tk.Label(win, text=(100*"-"), font=("Arial", 18, "bold"), bg="#ececec").pack(pady=10)
-                tk.Label(win, text=f"Order ID: {orderObj.order_id}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
-                tk.Label(win, text=f"Customer: {first} {last}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
-                tk.Label(win, text=f"Book: {title} — {author}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
-                tk.Label(win, text=f"Quantity: {qty}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
-                tk.Label(win, text=f"Total Price: £{orderObj._total_price:.2f}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
 
-                tk.Button(win, text="OK", width=25, height=5, font=("Arial", 15), bg="#7b7b7b", command=win.destroy).pack(pady=50)
+
+            tk.Label(win, text="Order Confirmation", font=("Arial", 18, "bold"), bg="#ececec").pack(pady=10)
+            tk.Label(win, text=(100*"-"), font=("Arial", 18, "bold"), bg="#ececec").pack(pady=10)
+            tk.Label(win, text=f"Order ID: {orderObj.order_id}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+            tk.Label(win, text=f"Customer: {first} {last}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+            tk.Label(win, text=f"Book: {title} — {author}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+            tk.Label(win, text=f"Quantity: {qty}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+            if use_shipping:
+                tk.Label(win, text=f"Shipping: £5.00", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+            tk.Label(win, text=f"Total Price: £{orderObj._total_price:.2f}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+            tk.Button(win, text="OK", width=20, height=2, font=("Arial", 15), bg="#7b7b7b", command=win.destroy).pack(pady=50)
 
 
         # Place Order Button Functionality
@@ -131,6 +152,8 @@ class PlaceOrderPage(tk.Frame):
             book_sel = books_tree.focus()
             cust_sel = customers_tree.focus()
             qty_text = quantity_entry.get().strip()
+            shipping = self.shipping_var.get()
+
 
             if not book_sel or not cust_sel:
                 messagebox.showerror("Missing selection", "Please select a book and a customer.")
@@ -159,14 +182,13 @@ class PlaceOrderPage(tk.Frame):
                     break
 
 
-            orderObj = Order(book_id, customer_id, customer_firstname, customer_lastname, book_title, book_author, email, quantity)
+            orderObj = Order(book_id, customer_id, customer_firstname, customer_lastname, book_title, book_author, email, quantity, shipping)
             orderObj.calculateTotalPrice(book_price) 
             result = orderObj.placeOrder()
 
 
-
             if result == "Order placed successfully!":
-                show_invoice(orderObj, customer_firstname, customer_lastname, book_title, book_author, quantity)
+                show_invoice(orderObj, customer_firstname, customer_lastname, book_title, book_author, quantity, shipping)
             elif result == "Order failed due to insufficient stock.":
                 messagebox.showerror("Insufficient Stock", "Order failed due to insufficient stock.")
             
