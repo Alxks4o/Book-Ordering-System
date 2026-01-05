@@ -36,7 +36,7 @@ class PlaceOrderPage(tk.Frame):
 
         books_tree = ttk.Treeview(
             books_frame,
-            columns=("id", "title", "author", "quantity"),
+            columns=("id", "title", "author", "price", "quantity"),
             show="headings",
             height=8
         )
@@ -45,12 +45,14 @@ class PlaceOrderPage(tk.Frame):
         books_tree.heading("id", text="ID")
         books_tree.heading("title", text="Title")
         books_tree.heading("author", text="Author")
+        books_tree.heading("price", text="Price")
         books_tree.heading("quantity", text="Quantity")
 
         #Column configurations
         books_tree.column("id", width=60, anchor="center")
-        books_tree.column("title", width=220, anchor="center")
+        books_tree.column("title", width=160, anchor="center")
         books_tree.column("author", width=160, anchor="center")
+        books_tree.column("price", width=100, anchor="center")
         books_tree.column("quantity", width=100, anchor="center")
 
         #Placing the table
@@ -106,7 +108,7 @@ class PlaceOrderPage(tk.Frame):
         self.urgent_shipping_var = tk.BooleanVar(value=False)
         urgent_shipping_checkbox = tk.Checkbutton(
             self,
-            text="Urgent Shipping (+£5.00)",
+            text="Urgent Shipping (+£3.00)",
             font=("Arial", 12),
             bg="#ffd3ad",
             indicatoron=False,
@@ -169,7 +171,7 @@ class PlaceOrderPage(tk.Frame):
         books = self.bookObj.getBooks()
         try:
             for book in books:
-                books_tree.insert("", tk.END, values=(book["ID"], book["title"], book["author"], book["quantity"]))
+                books_tree.insert("", tk.END, values=(book["ID"], book["title"], book["author"], f"£{book["price"]:.2f}", book["quantity"]))
         except:
             pass
 

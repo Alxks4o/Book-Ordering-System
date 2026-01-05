@@ -6,14 +6,15 @@ from backend.add_customer import Customer
 from backend.add_book import Book
 
 '''
-PAGE FOR ADDING CUSTOMERS AND BOOKS
+AddPage - Page for adding customers and books to the system, with tabs for each function. 
+Provides forms for input and feedback messages.
 '''
 
 class AddPage(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, bg="#f5e6c8")
 
-        #Setting up tabs
+        #Setting up tabs and styles
         style = ttk.Style()
         style.theme_use('alt')
         style.configure('TNotebook', background="#e9bb8d", borderwidth=0, padding=40)
@@ -31,9 +32,7 @@ class AddPage(tk.Frame):
 
 
         '''
-        
-        TAB FOR ADDING CUSTOMERS
-
+        TAB FOR ADDING CUSTOMERS - Includes form fields and buttons
         '''
 
 
@@ -144,12 +143,14 @@ class AddPage(tk.Frame):
             .grid(row=12, column=0, sticky="nes", padx=50, pady=20)
 
 
+    # Function to clear entries for customers 
     def clearCustomerEntries(self):
         self.first_name_entry.delete(0, tk.END)
         self.last_name_entry.delete(0, tk.END)
         self.email_entry.delete(0, tk.END)
         self.address_entry.delete(0, tk.END)
 
+    # Function to clear entries for books
     def clearBookEntries(self):
         self.title_entry.delete(0, tk.END)
         self.author_entry.delete(0, tk.END)
@@ -159,51 +160,59 @@ class AddPage(tk.Frame):
     
 
 
-    # Function for adding books
- 
+    '''
+    Function for adding books by collecting data from form fields and interacting with the Book backend class.
+    '''
     def addBookFunc(self):
+
+        # Collecting data from form fields
         title = self.title_entry.get().strip()
         author = self.author_entry.get().strip()
         isbn = self.isbn_entry.get().strip()
         price = self.price_entry.get().strip()
         quantity = self.quantity_entry.get().strip()
 
+        # Validating input fields
         if not title or not author or not isbn or not price or not quantity:
-            self.message_label_book.config(text="All fields are required.", fg="red")
+            self.message_label_book.config(text="All fields are required.", fg="red") # error message if fields are missing
             return
 
+        # Creating Book instance
         book = Book(title, author, isbn, price, quantity)
 
-        # CALL ONCE
         result = book.createBook()
 
+        # DISPLAY MESSAGE BASED ON SINGLE RESULT
         if result != "Book added successfully!":
-            self.message_label_book.config(text=result, fg="red")
+            self.message_label_book.config(text=result, fg="red") # error message
         else:
-            self.message_label_book.config(text=result, fg="green")
-            self.clearBookEntries()
+            self.message_label_book.config(text=result, fg="green") # success message
+            self.clearBookEntries() # clear form fields after successful addition
 
-    # Function for adding customers
-    
+
+    '''
+    Function for adding customers by collecting data from form fields and interacting with the Customer backend class.
+    '''    
     def addCustomerFunc(self):
+        # Collecting data from form fields
         firstName = self.first_name_entry.get().strip()
         lastName = self.last_name_entry.get().strip()
         email = self.email_entry.get().strip()
         address = self.address_entry.get().strip()
 
+        # Validating input fields
         if not firstName or not lastName or not email or not address:
-            self.message_label_user.config(text="All fields are required.", fg="red")
+            self.message_label_user.config(text="All fields are required.", fg="red") # error message if fields are missing
             return
 
-        user = Customer(firstName, lastName, email, address)
+        # Creating Customer instance
+        user = Customer(firstName, lastName, email, address) 
 
-        # CALL ONCE
         result = user.createUser()
 
         # DISPLAY MESSAGE BASED ON SINGLE RESULT
         if result != "Customer added successfully!":
-            self.message_label_user.config(text=result, fg="red")
+            self.message_label_user.config(text=result, fg="red") # error message
         else:
-            self.message_label_user.config(text=result, fg="green")
-            self.clearCustomerEntries()
-            print("Customer added successfully!")
+            self.message_label_user.config(text=result, fg="green") # success message
+            self.clearCustomerEntries() # clear form fields after successful addition

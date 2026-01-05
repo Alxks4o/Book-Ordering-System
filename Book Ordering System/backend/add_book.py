@@ -19,6 +19,8 @@ class Stock:
     
     #Getters and Setters - to access and modify protected attributes
     
+    # Title
+
     @property
     def title(self):
         return self._title
@@ -27,6 +29,8 @@ class Stock:
     def title(self, title):
         self._title = title.strip()
 
+    # Author
+
     @property
     def author(self):
         return self._author
@@ -34,7 +38,9 @@ class Stock:
     @author.setter
     def author(self, author):
         self._author = author.strip()
-    
+
+    # ISBN
+
     @property
     def isbn(self):
         return self._isbn
@@ -42,6 +48,8 @@ class Stock:
     @isbn.setter
     def isbn(self, isbn):
         self._isbn = isbn.strip()
+
+    # Price
 
     @property
     def price(self):
@@ -54,7 +62,7 @@ class Stock:
 
 
 '''
-Book Class - child class of Stock, represents a book in the inventory
+Book Class - child class of Stock, represents a book in the inventory. Handles book-specific attributes and methods for managing book records.
 '''
 
 class Book(Stock):
@@ -65,13 +73,16 @@ class Book(Stock):
 
         #setting up file path for storing book data
         base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
-        self.file_path = os.path.join(base_dir, "data", "books.pkl")
+        self.file_path = os.path.join(base_dir, "data", "books.pkl") # book data file path
 
         self.__bookID = self.nextID() # Assigning a unique book ID
         self.__quantity = quantity # Quantity of the book in stock
 
     
     #Getters and Setters - to access and modify private attributes
+
+    # Book ID
+
     @property
     def bookID(self):
         return self.__bookID
@@ -79,6 +90,8 @@ class Book(Stock):
     @bookID.setter
     def bookID(self, bookID):
         self.__bookID = bookID
+
+    # Quantity
 
     @property
     def quantity(self):
@@ -88,54 +101,59 @@ class Book(Stock):
     def quantity(self, quantity):
         self.__quantity = quantity
 
+
     #helper method to check if the data file exists
     def checkFileExists(self):
-        return os.path.isfile(self.file_path)
+        return os.path.isfile(self.file_path) 
 
     #method to generate the next unique book ID
     def nextID(self):
         try:        
-            if self.checkFileExists():
+            if self.checkFileExists(): # checking if file exists
                 with open(self.file_path, "rb") as f:
-                    book = pickle.load(f)
+                    book = pickle.load(f) # loading existing book data
                     if book:
-                        return book[-1]["ID"] + 1
-            return 0
+                        return book[-1]["ID"] + 1 # generating next ID based on last record
+            return 0 # starting ID from 0 if no records exist
         except:
-            return 0
+            return 0 # in case of any error, start ID from 0
 
     def getBooks(self):
-        if not self.checkFileExists():
-            return []
+        if not self.checkFileExists(): # checking if file exists
+            return [] # returning empty list if no file
         try:
-            with open(self.file_path, "rb") as f:
-                books = pickle.load(f)
+            with open(self.file_path, "rb") as f: # loading existing book data
+                books = pickle.load(f) 
             
-            if isinstance(books, list):
-                return books
+            if isinstance(books, list): # checking if data is in list format
+                return books # returning list of books
             else:
-                return []
+                return [] # returning empty list if data is not in expected format
+            
         except Exception:
-            return []
+            return [] # returning empty list in case of any error
 
-    #method to create and save a new book record
+    '''
+    Main method to create and save a new book record, returns success or error message.
+    '''
     def createBook(self):
-        data_valid = False
+        data_valid = False # flag to track data validity
 
         #validating price and quantity inputs
         try:
-            int(self.price)
+            int(self.price) 
             data_valid = True
         except:
             return "Price must be a number!"
         
-        
+        # validating quantity input
         try:
             int(self.quantity)
             data_valid = True
         except:
             return "Quantity must be an integer!"
 
+        # If all data is valid, proceed to create and save the book record
         if  data_valid:          
             book = {
                 "ID": self.bookID,
@@ -147,37 +165,20 @@ class Book(Stock):
             }
 
             if self.checkFileExists():
-                with open(self.file_path, "rb") as f:
+                with open(self.file_path, "rb") as f: # loading existing book data
                     data = pickle.load(f)
 
-                if not isinstance(data, list):
+                if not isinstance(data, list): # checking if data is in list format
                     data = []
             else:
-                data = []
+                data = [] # initializing empty list if file does not exist
 
-            data.append(book)
+            data.append(book) # adding new book record
 
             with open(self.file_path, "wb") as f:
-                pickle.dump(data, f)
+                pickle.dump(data, f) # saving updated book data
 
-            return "Book added successfully!"
-
-
-
-# TESTING 
-
-# title = input("Enter title: ") 
-# author = input("Enter author: ")
-# isbn = input("Enter isbn: ")
-# price = float(input("Enter price: "))
-# quantity = int(input("Enter quantity: "))
-
-# book1 = Book(title, author, isbn, price, quantity)
-# book1.createBook()
+            return "Book added successfully!" # success message
 
 
-# with open(book1.file_path, 'rb') as f:
-#      book_from_file = pickle.load(f)
 
-# for book in book_from_file:
-#     print(f"ID: {book["ID"]}, Title: {book["title"]}, Author: {book["author"]}, ISBN: {book["isbn"]}, Price: {book["price"]}, Quantity: {book["quantity"]}")
