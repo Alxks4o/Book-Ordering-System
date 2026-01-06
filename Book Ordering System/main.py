@@ -8,7 +8,7 @@ import pages.AddPage as AddCustomer
 import pages.Homepage as HomepageFunc
 import pages.PlaceOrderPage as PlaceOrderFunc
 import pages.ViewInvoices as ViewInvoicesFunc
-import pages.SearchInvoices as SearchInvoicesFunc
+
 
 # Function to switch frames
 def showFrame(frame):
@@ -80,15 +80,6 @@ viewInvoicesButton = tk.Button(
 ).pack(fill='x')
 
 
-#Button for searching through invoices 
-searchInvoicesButton = tk.Button(
-    navigation,
-    **button_style,
-    text= "Search Invoices",
-    command=lambda: showFrame(searchInvoices)
-).pack(fill='x')
-
-
 
 '''
 FRAMES - This is where the content of each page will go
@@ -118,10 +109,6 @@ placeOrder.grid(row=0, column=0, sticky='nsew')
 viewInvoices = ViewInvoicesFunc.ViewInvoices(main)
 viewInvoices.grid(row=0, column=0, sticky='nsew')
 
-
-#search invoices page frame
-searchInvoices = SearchInvoicesFunc.SearchInvoices(main)
-searchInvoices.grid(row=0, column=0, sticky='nsew')
 
 
 #show home page by default

@@ -80,10 +80,13 @@ class PlaceOrderPage(tk.Frame):
                 # Show urgent shipping checkbox and place order button below it
                 urgent_shipping_checkbox.grid(row=7, column=0, padx=30, pady=10, sticky='w')  
                 place_order_button.grid(row=8, column=0, columnspan=2, pady=30, sticky="w", padx=30)
+                refresh_button.grid(row=8, column=0, columnspan=2, pady=30, sticky="w", padx=220)
             else:
                 # Hide urgent shipping checkbox and move place order button up
                 urgent_shipping_checkbox.grid_remove()
                 place_order_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=30)
+                refresh_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=220)
+
 
 
         #Shipping Checkbuttons Setup         
@@ -140,7 +143,7 @@ class PlaceOrderPage(tk.Frame):
         
         # Customer frame
         customers_frame = tk.Frame(self, bg="#e9bb8d")
-        customers_frame.grid(row=2, column=1, padx=30, pady=10, sticky='e')
+        customers_frame.grid(row=2, column=1, padx=10, pady=10, sticky='e')
 
         customers_tree = ttk.Treeview(
             customers_frame,
