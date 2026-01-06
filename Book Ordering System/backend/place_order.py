@@ -93,6 +93,9 @@ class Order:
     def checkFileExists(self, path):
         return os.path.isfile(path)
 
+
+
+
     '''
     Method to calculate the total price of the order, including shipping costs.
     '''
