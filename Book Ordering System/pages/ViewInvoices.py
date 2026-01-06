@@ -123,6 +123,9 @@ class ViewInvoices(tk.Frame):
             
         invoices = self.invoiceObj.getOrders()
 
+        def clearTree():
+            for item in invoices_tree.get_children():
+                invoices_tree.delete(item)
 
         def searchInvoices():
             entry = search_bar.get().strip()
@@ -142,8 +145,7 @@ class ViewInvoices(tk.Frame):
                 if int(invoice['order_id']) == target_id:
                     matches.append(invoice)
 
-            for item in invoices_tree.get_children():
-                invoices_tree.delete(item)
+            clearTree()
 
             if matches:
                 refreshTreeView(matches)
@@ -156,6 +158,7 @@ class ViewInvoices(tk.Frame):
 
         def refreshTreeView(invoices):
             try:
+                clearTree()
                 for invoice in invoices:
                     shipping_cost = 0
                     shipping_type = get_shipping_type(invoice)
