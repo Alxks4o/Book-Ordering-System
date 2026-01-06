@@ -94,11 +94,11 @@ class ViewInvoices(tk.Frame):
 
         self.bookObj = Book("", "", "", 0, 0) 
         
-        def getBookPrice(x):
+        def getBookPrice(selected_book):
             # Fetch book price from the books list
             books = self.bookObj.getBooks()
             book_price = 0
-            book_id = x['book_id']
+            book_id = selected_book['book_id']
 
             for book in books:
                 if book["ID"] == int(book_id): # match book ID
@@ -188,5 +188,17 @@ class ViewInvoices(tk.Frame):
                     )
             except Exception as e:
                 pass
+
+        def refreshInvoices():
+            latest_invoices = self.invoiceObj.getOrders()
+            refreshTreeView(latest_invoices)
+
+        #Place Order Button
+        refresh_button = tk.Button(self, text="Refresh", font=("Arial", 15), bg="#ffd3ad", height=2, width=14)
+        refresh_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=30)
+
+        
+        refresh_button.configure(command=refreshInvoices)
+        
             
         refreshTreeView(invoices)

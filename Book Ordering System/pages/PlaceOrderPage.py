@@ -124,6 +124,10 @@ class PlaceOrderPage(tk.Frame):
         place_order_button = tk.Button(self, text="Place Order", font=("Arial", 15), bg="#ffd3ad", height=2, width=14)
         place_order_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=30)
 
+        #Place Order Button
+        refresh_button = tk.Button(self, text="Refresh", font=("Arial", 15), bg="#ffd3ad", height=2, width=14)
+        refresh_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=220)
+
         
 
         '''
@@ -163,29 +167,52 @@ class PlaceOrderPage(tk.Frame):
         customers_tree.configure(yscrollcommand=customers_scroll.set)
         customers_scroll.grid(row=0, column=1, sticky="ns")
 
+        self.bookObj = Book("", "", "", 0, 0)
+        books = self.bookObj.getBooks()
+
+        self.customerObj = Customer("", "", "", "")
+
+        def clearTree(table_name):
+            for item in table_name.get_children():
+                table_name.delete(item)
 
         '''
         Populating the Books Table - fetching books from the database and inserting them into the books table
         '''
-        self.bookObj = Book("", "", "", 0, 0)
-        books = self.bookObj.getBooks()
-        try:
-            for book in books:
-                books_tree.insert("", tk.END, values=(book["ID"], book["title"], book["author"], f"£{book["price"]:.2f}", book["quantity"]))
-        except:
-            pass
+        def populateBooks():
+            latest_books = self.bookObj.getBooks()
+
+            clearTree(books_tree)
+
+            try:
+                for book in latest_books:
+                    books_tree.insert("", tk.END, values=(book["ID"], book["title"], book["author"], f"£{book["price"]:.2f}", book["quantity"]))
+            except Exception:
+                pass
+        
+        populateBooks()
 
         
         '''
         Populating the Customers Table - fetching customers from the database and inserting them into the customers table
         '''
-        self.customerObj = Customer("", "", "", "")
-        customers = self.customerObj.getCustomers()
-        for customer in customers:
-            full_name = f'{customer["first_name"]} {customer["last_name"]}' # concatenate first and last name
-            customers_tree.insert("", tk.END, values=(customer["ID"], full_name, customer["email"], customer["address"]))
+        def populateCustomers():
+            latest_customer = self.customerObj.getCustomers()
+
+            clearTree(customers_tree)
+
+            for customer in latest_customer:
+                full_name = f'{customer["first_name"]} {customer["last_name"]}' # concatenate first and last name
+                customers_tree.insert("", tk.END, values=(customer["ID"], full_name, customer["email"], customer["address"]))
+
+        populateCustomers()
 
 
+        def refreshAll():
+            populateCustomers()
+            populateBooks()
+
+        
         '''
         Function to show the invoice in a new window after placing an order successfully
         '''
@@ -220,7 +247,7 @@ class PlaceOrderPage(tk.Frame):
                 tk.Label(win, text=f"Shipping: £5.00", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
 
             tk.Label(win, text=f"Total Price: £{orderObj._total_price:.2f}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
-            tk.Button(win, text="OK", width=20, height=2, font=("Arial", 15), bg="#7b7b7b", command=win.destroy).pack(pady=50)
+            tk.Button(win, text="Close", width=20, height=2, font=("Arial", 15), bg="#7b7b7b", command=win.destroy).pack(pady=50)
 
 
         '''
@@ -287,6 +314,8 @@ class PlaceOrderPage(tk.Frame):
                 messagebox.showerror("Insufficient Stock", "Order failed due to insufficient stock.")
             
             # Clear the quantity entry field after placing the order
+            populateBooks()
             quantity_entry.delete(0, tk.END)
     
         place_order_button.configure(command=place_order)
+        refresh_button.configure(command=refreshAll)
