@@ -1,4 +1,5 @@
 import tkinter as tk
+import os
 
 #importing backend modules
 from backend.add_customer import Customer
@@ -10,6 +11,14 @@ import pages.PlaceOrderPage as PlaceOrderFunc
 import pages.ViewInvoices as ViewInvoicesFunc
 
 
+#setting up file path for storing book data
+base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
+window_logo_filepath = os.path.join(base_dir, "assets", "window-logo.ico") # book data file path
+
+print("ICON PATH:", window_logo_filepath)
+print("EXISTS:", os.path.exists(window_logo_filepath))
+print("FILE: ",window_logo_filepath)
+
 # Function to switch frames
 def showFrame(frame):
     frame.tkraise()
@@ -20,6 +29,7 @@ window = tk.Tk()
 #setting window size
 window.geometry("1000x900")
 window.minsize(1000, 900)
+window.iconbitmap(window_logo_filepath)
 
 #setting window grid configuration
 window.rowconfigure(0, weight=1)
@@ -59,8 +69,8 @@ addCustomerButton = tk.Button(
     **button_style,
     text= "Add",
     command=lambda: showFrame(add)
-).pack(fill='x')
 
+).pack(fill='x')
 
 #button for placing orders 
 placeOrderButton = tk.Button(
@@ -112,7 +122,7 @@ viewInvoices.grid(row=0, column=0, sticky='nsew')
 
 
 #show home page by default
-showFrame(viewInvoices)
+showFrame(home)
 
 
 #running the window

@@ -129,6 +129,7 @@ class ViewInvoices(tk.Frame):
             for item in invoices_tree.get_children():
                 invoices_tree.delete(item)
 
+        
         def searchInvoices():
             entry = search_bar.get().strip()
 
@@ -153,9 +154,19 @@ class ViewInvoices(tk.Frame):
 
             refreshTreeView(matches)
 
-    
+
+        def validate_search_input(*args):
+            entry = search_bar.get().strip()
+            if entry.isdigit():
+                search_btn.config(state="normal")
+            else:
+                search_btn.config(state="disabled")
+
         search_btn = tk.Button(invoices_frame, text="Search", font=('Arial', 12), command=searchInvoices)
-        search_btn.grid(row=0, column=0, padx= 278, pady=10, sticky='w')
+        search_btn.grid(row=0, column=0, padx=278, pady=10, sticky='w')
+
+        search_bar.bind("<KeyRelease>", validate_search_input)
+        validate_search_input()
 
         def refreshTreeView(invoices):
             try:
@@ -193,13 +204,18 @@ class ViewInvoices(tk.Frame):
         def refreshInvoices():
             latest_invoices = self.invoiceObj.getOrders()
             refreshTreeView(latest_invoices)
+            if len(latest_invoices) == 0:
+                refresh_button.config(state="disabled")
+            else:
+                refresh_button.config(state="normal")
+        
 
         #Place Order Button
         refresh_button = tk.Button(self, text="Refresh", font=("Arial", 15), bg="#ffd3ad", height=2, width=14)
         refresh_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=30)
 
+        refreshInvoices()
         
         refresh_button.configure(command=refreshInvoices)
         
             
-        refreshTreeView(invoices)
