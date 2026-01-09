@@ -11,13 +11,14 @@ import pages.PlaceOrderPage as PlaceOrderFunc
 import pages.ViewInvoices as ViewInvoicesFunc
 
 
-#setting up file path for storing book data
-base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
-window_logo_filepath = os.path.join(base_dir, "assets", "window-logo.ico") # book data file path
+# setting up file path 
+current_dir = os.path.dirname(__file__)
 
-print("ICON PATH:", window_logo_filepath)
-print("EXISTS:", os.path.exists(window_logo_filepath))
-print("FILE: ",window_logo_filepath)
+# logo filepath
+window_logo_filepath = os.path.join(current_dir, "assets", "window-logo.ico")
+
+nav_logo_filepath = os.path.join(current_dir, "assets", "nav-logo.png")
+
 
 # Function to switch frames
 def showFrame(frame):
@@ -29,7 +30,8 @@ window = tk.Tk()
 #setting window size
 window.geometry("1000x900")
 window.minsize(1000, 900)
-window.iconbitmap(window_logo_filepath)
+window.iconbitmap(window_logo_filepath) # setting logo
+window.title("Book Ordering System")
 
 #setting window grid configuration
 window.rowconfigure(0, weight=1)
@@ -44,6 +46,12 @@ NAVIGATION - This is where the navigation buttons will go
 navigation = tk.Frame(window, bg='#ffe9d6')
 navigation.grid(row=0, column=0, sticky='ns')
 
+nav_logo = tk.PhotoImage(file=nav_logo_filepath).subsample(4, 4) # logo size
+
+# logo style 
+logo_label = tk.Label(navigation, image=nav_logo, bg="#ffe9d6")
+logo_label.image = nav_logo
+logo_label.pack(side="bottom", pady=20)
 
 
 #buttons quick design 
