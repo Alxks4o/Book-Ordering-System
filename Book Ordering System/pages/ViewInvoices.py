@@ -48,13 +48,14 @@ class ViewInvoices(tk.Frame):
 
         invoices_tree = ttk.Treeview(
             invoices_frame,
-            columns=("order_id", "customer_name", "address", "book_title", "book_author", "quantity", "shipping_cost", "shipping_type", "total_price"),
+            columns=("order_id", "customer_name", "email", "address", "book_title", "book_author", "quantity", "shipping_cost", "shipping_type", "total_price"),
             show="headings",
             height=15
         )
 
         invoices_tree.heading("order_id", text="Order ID")
         invoices_tree.heading("customer_name", text="Customer Name")
+        invoices_tree.heading("email", text="Email")
         invoices_tree.heading("address", text="Address")
         invoices_tree.heading("book_title", text="Book Title")
         invoices_tree.heading("book_author", text="Book Author")
@@ -65,6 +66,7 @@ class ViewInvoices(tk.Frame):
 
         invoices_tree.column("order_id", width=80, anchor="center")
         invoices_tree.column("customer_name", width=150, anchor="center")
+        invoices_tree.column("email", width=200, anchor="center")
         invoices_tree.column("address", width=200, anchor="center")
         invoices_tree.column("book_title", width=150, anchor="center")
         invoices_tree.column("book_author", width=150, anchor="center")
@@ -130,27 +132,26 @@ class ViewInvoices(tk.Frame):
         def searchInvoices():
             entry = search_bar.get().strip()
 
+            latest_invoices = self.invoiceObj.getOrders()
+
             if entry == placeholder or entry == "":
-                refreshTreeView(invoices)
+                refreshTreeView(latest_invoices)
                 return
             
             try:
                 target_id = int(entry)
             except ValueError:
-                refreshTreeView(invoices)
+                refreshTreeView(latest_invoices)
                 return
             
             matches = []
-            for invoice in invoices:
+            for invoice in latest_invoices:
                 if int(invoice['order_id']) == target_id:
                     matches.append(invoice)
 
             clearTree()
 
-            if matches:
-                refreshTreeView(matches)
-            else:
-                refreshTreeView([])
+            refreshTreeView(matches)
 
     
         search_btn = tk.Button(invoices_frame, text="Search", font=('Arial', 12), command=searchInvoices)
@@ -170,13 +171,13 @@ class ViewInvoices(tk.Frame):
                     else:
                         shipping_cost = 0
 
-
                     invoices_tree.insert(
                         "",
                         tk.END,
                         values=(
                             invoice["order_id"],
                             f"{invoice['customer_fname']} {invoice['customer_lname']}",
+                            invoice["email"],
                             invoice["address"],
                             invoice["book_title"],
                             invoice["book_author"],

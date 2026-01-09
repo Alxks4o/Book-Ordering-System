@@ -124,10 +124,10 @@ class PlaceOrderPage(tk.Frame):
         )
 
         #Place Order Button
-        place_order_button = tk.Button(self, text="Place Order", font=("Arial", 15), bg="#ffd3ad", height=2, width=14)
+        place_order_button = tk.Button(self, text="Place Order", font=("Arial", 15), bg="#ffd3ad", height=2, width=14, state="disabled") 
         place_order_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=30)
 
-        #Place Order Button
+        # Refresh Button
         refresh_button = tk.Button(self, text="Refresh", font=("Arial", 15), bg="#ffd3ad", height=2, width=14)
         refresh_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=220)
 
@@ -164,7 +164,7 @@ class PlaceOrderPage(tk.Frame):
         customers_tree.column("email", width=180, anchor="center")
         customers_tree.column("address", width=200, anchor="center")
         customers_tree.grid(row=0, column=0, sticky="nsew")
-
+        
         # Scrollbar for the customers table
         customers_scroll = ttk.Scrollbar(customers_frame, orient="vertical", command=customers_tree.yview)
         customers_tree.configure(yscrollcommand=customers_scroll.set)
@@ -172,6 +172,28 @@ class PlaceOrderPage(tk.Frame):
 
         self.bookObj = Book("", "", "", 0, 0)
         books = self.bookObj.getBooks()
+        
+        
+        '''
+        Function for disabling and enabling Place Order button
+        '''
+        def validate_order_ready(*args):
+            book_sel = books_tree.focus()
+            cust_sel = customers_tree.focus()
+            qty_text = quantity_entry.get().strip()
+
+            # Check all conditions
+            if book_sel and cust_sel and qty_text.isdigit() and int(qty_text) > 0:
+                place_order_button.config(state="normal")
+            else:
+                place_order_button.config(state="disabled")
+
+
+        # Bind events to enable/disable the Place Order button
+        books_tree.bind("<<TreeviewSelect>>", validate_order_ready)
+        customers_tree.bind("<<TreeviewSelect>>", validate_order_ready)
+        quantity_entry.bind("<KeyRelease>", validate_order_ready)
+
 
         self.customerObj = Customer("", "", "", "")
 
@@ -249,7 +271,7 @@ class PlaceOrderPage(tk.Frame):
                 # urgent shipping
                 tk.Label(win, text=f"Shipping: £5.00", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
 
-            tk.Label(win, text=f"Total Price: £{orderObj._total_price:.2f}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
+            tk.Label(win, text=f"Total Price: £{orderObj.total_price:.2f}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
             tk.Button(win, text="Close", width=20, height=2, font=("Arial", 15), bg="#7b7b7b", command=win.destroy).pack(pady=50)
 
 
@@ -284,7 +306,7 @@ class PlaceOrderPage(tk.Frame):
             customer_id = cust_vals[0]
             customer_firstname = cust_vals[1].split(" ")[0]
             customer_lastname = cust_vals[1].split(" ")[1]
-            address = cust_vals[2]
+            address = cust_vals[3]
             email = cust_vals[2]
 
             # Getting book values from the selected book
@@ -304,8 +326,7 @@ class PlaceOrderPage(tk.Frame):
 
             # Creating an Order object and placing the order
             orderObj = Order(book_id, customer_id, customer_firstname, customer_lastname, address, book_title, book_author, email, quantity, shipping, urgent_shipping)
-            orderObj.calculateTotalPrice(book_price) # calculate total price
-            result = orderObj.placeOrder()  # place the order
+            result = orderObj.placeOrder(book_price)  # place the order
 
             # Handling the result of the order placement
             if result == "Order placed successfully!":
