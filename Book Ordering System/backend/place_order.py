@@ -16,22 +16,25 @@ class Order:
         base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
         
         # orders file path
-        self.orders_file_path = os.path.join(base_dir, "data", "orders.pkl")
+        self._orders_file_path = os.path.join(base_dir, "data", "orders.pkl")
 
         # books file path
-        self.books_file_path = os.path.join(base_dir, "data", "books.pkl")
+        self._books_file_path = os.path.join(base_dir, "data", "books.pkl")
 
         # initializing order attributes
         self.__order_id = self.__nextID()
+        self.__book_id = book_id
+        self.__customer_id = customer_id
+        
         self._customer_firstname = fname
         self._customer_lastname = lname
         self._address = address
+        self._email = email
+
         self._book_title = book_title
         self._book_author = book_author
-        self.__book_id = book_id
-        self.__customer_id = customer_id
-        self._email = email
         self._quantity = quantity
+
         self._shipping = shipping
         self._urgent_shipping = urgent_shipping
         self._total_price = 0
@@ -84,8 +87,8 @@ class Order:
     '''
     def __nextID(self):
         #check if orders file exists and get the last order ID
-        if self.__checkFileExists(self.orders_file_path):
-            with open(self.orders_file_path, "rb") as f: # open in read binary mode
+        if self.__checkFileExists(self._orders_file_path):
+            with open(self._orders_file_path, "rb") as f: # open in read binary mode
                 order = pickle.load(f)
                 if order:
                     return order[-1]["order_id"] + 1 # increment last order ID and add 1 to it 
@@ -97,8 +100,6 @@ class Order:
     '''
     def __checkFileExists(self, path):
         return os.path.isfile(path)
-
-
 
 
     '''
@@ -127,8 +128,8 @@ class Order:
     '''
 
     def getOrders(self):
-        if self.__checkFileExists(self.orders_file_path): # check if orders file exists
-            with open(self.orders_file_path, "rb") as f:
+        if self.__checkFileExists(self._orders_file_path): # check if orders file exists
+            with open(self._orders_file_path, "rb") as f:
                 orders = pickle.load(f)
                 return orders # return list of orders
             
@@ -142,7 +143,7 @@ class Order:
     def _updateQuantity(self):
         
         # read existing books from books file
-        with open(self.books_file_path, "rb") as f:
+        with open(self._books_file_path, "rb") as f:
             books = pickle.load(f)
         
         # update the quantity of the ordered book
@@ -154,7 +155,7 @@ class Order:
                 
                 book["quantity"] -= int(self._quantity) # reduce stock by ordered quantity
         
-        with open(self.books_file_path, "wb") as f:
+        with open(self._books_file_path, "wb") as f:
             pickle.dump(books, f) # write updated books back to file
         
         return True # return True if stock updated successfully
@@ -209,15 +210,15 @@ class Order:
         
         # Read existing orders, append the new order, and write back to file
 
-        if self.__checkFileExists(self.orders_file_path):
-            with open(self.orders_file_path, "rb") as f:
+        if self.__checkFileExists(self._orders_file_path):
+            with open(self._orders_file_path, "rb") as f:
                 data = pickle.load(f) # load existing orders
         else:
             data = [] # initialize empty list if no orders exist
         
         data.append(order) # add new order to list
 
-        with open(self.orders_file_path, "wb") as f:
+        with open(self._orders_file_path, "wb") as f:
             pickle.dump(data, f) # write updated orders back to file
 
         return "Order placed successfully!" # return success message

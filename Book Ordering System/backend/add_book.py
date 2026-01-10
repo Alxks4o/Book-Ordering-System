@@ -73,7 +73,7 @@ class Book(Stock):
 
         #setting up file path for storing book data
         base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
-        self.file_path = os.path.join(base_dir, "data", "books.pkl") # book data file path
+        self._file_path = os.path.join(base_dir, "data", "books.pkl") # book data file path
 
         self.__bookID = self.__nextID() # Assigning a unique book ID
         self.__quantity = quantity # Quantity of the book in stock
@@ -104,13 +104,13 @@ class Book(Stock):
 
     #helper method to check if the data file exists
     def __checkFileExists(self):
-        return os.path.isfile(self.file_path) 
+        return os.path.isfile(self._file_path) 
 
     #method to generate the next unique book ID
     def __nextID(self):
         try:        
             if self.__checkFileExists(): # checking if file exists
-                with open(self.file_path, "rb") as f:
+                with open(self._file_path, "rb") as f:
                     book = pickle.load(f) # loading existing book data
                     if book:
                         return book[-1]["ID"] + 1 # generating next ID based on last record
@@ -122,7 +122,7 @@ class Book(Stock):
         if not self.__checkFileExists(): # checking if file exists
             return [] # returning empty list if no file
         try:
-            with open(self.file_path, "rb") as f: # loading existing book data
+            with open(self._file_path, "rb") as f: # loading existing book data
                 books = pickle.load(f) 
             
             if isinstance(books, list): # checking if data is in list format
@@ -171,7 +171,7 @@ class Book(Stock):
         # Load existing data or create a new list 
 
         if self.__checkFileExists():
-            with open(self.file_path, "rb") as f: # loading existing book data
+            with open(self._file_path, "rb") as f: # loading existing book data
                 data = pickle.load(f)
 
             if not isinstance(data, list): # checking if data is in list format
@@ -186,7 +186,7 @@ class Book(Stock):
 
         # saving book to file
         
-        with open(self.file_path, "wb") as f:
+        with open(self._file_path, "wb") as f:
             pickle.dump(data, f) 
 
         return "Book added successfully!" # success message
