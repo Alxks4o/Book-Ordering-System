@@ -7,10 +7,10 @@ class HomePage(tk.Frame):
         # Title
         tk.Label(
             self,
-            text="Welcome to the Book Ordering System",
+            text="Welcome back!",
             font=("Arial", 28, "bold"),
             bg="#e9bb8d"
-        ).grid(row=0, column=0, padx=30, pady=(60, 20))
+        ).grid(row=0, column=0, padx=600, pady=(60, 20))
 
         # Subtitle
         tk.Label(

@@ -123,7 +123,6 @@ class ViewInvoices(tk.Frame):
                 return "No Shipping" 
             
             
-        invoices = self.invoiceObj.getOrders()
 
         def clearTree():
             for item in invoices_tree.get_children():
@@ -162,7 +161,7 @@ class ViewInvoices(tk.Frame):
             else:
                 search_btn.config(state="disabled")
 
-        search_btn = tk.Button(invoices_frame, text="Search", font=('Arial', 12), command=searchInvoices)
+        search_btn = tk.Button(invoices_frame, text="Search", font=('Arial', 12), bg= "#ffd3ad", fg ="#000000", command=searchInvoices)
         search_btn.grid(row=0, column=0, padx=278, pady=10, sticky='w')
 
         search_bar.bind("<KeyRelease>", validate_search_input)
