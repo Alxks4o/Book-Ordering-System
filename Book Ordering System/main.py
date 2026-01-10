@@ -53,7 +53,7 @@ logo_label = tk.Label(navigation, image=nav_logo, bg="#ffe9d6")
 logo_label.image = nav_logo
 logo_label.pack(side="bottom", pady=20)
 
-nav_label = tk.Label(navigation, text="Book Ordering System", font=("Arial", 22, "bold"), bg="#ffe9d6", fg="#202020"
+nav_label = tk.Label(navigation, text="Book Ordering System", font=("Arial", 18, "bold"), bg="#ffe9d6", fg="#202020"
 ).pack(fill='x', padx=15, pady=(10,50))
 
 
@@ -72,7 +72,7 @@ homeButton = tk.Button(
     **button_style,
     text= "Home",
     command=lambda: showFrame(home)
-).pack(fill='x', padx=15, pady=8)
+).pack(fill='x', padx=30, pady=8)
 
 
 #button for adding customers 
@@ -81,25 +81,25 @@ addCustomerButton = tk.Button(
     **button_style,
     text= "Add",
     command=lambda: showFrame(add)
-).pack(fill='x', padx=15, pady=8)
+).pack(fill='x', padx=30, pady=8)
 
 
 #button for placing orders 
 placeOrderButton = tk.Button(
     navigation,
     **button_style,
-    text= "Place Order",
+    text= "Order",
     command=lambda: showFrame(placeOrder)
-).pack(fill='x', padx=15, pady=8)
+).pack(fill='x', padx=30, pady=8)
 
 
 #button for viewing invoices 
 viewInvoicesButton = tk.Button(
     navigation,
     **button_style,
-    text= "View Invoices",
+    text= "Invoices",
     command=lambda: showFrame(viewInvoices)
-).pack(fill='x', padx=15, pady=8)
+).pack(fill='x', padx=30, pady=8)
 
 
 

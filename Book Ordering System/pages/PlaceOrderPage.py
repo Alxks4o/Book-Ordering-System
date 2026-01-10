@@ -246,7 +246,8 @@ class PlaceOrderPage(tk.Frame):
             # Create a new window for the invoice
             win = tk.Toplevel()
             win.title("Invoice")
-            win.geometry("400x450")
+            win.geometry("500x450")
+            # win.iconbitmap()
             win.resizable(False, False)
             win.configure(bg="#ececec")
             
