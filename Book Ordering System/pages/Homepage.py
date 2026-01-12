@@ -10,7 +10,7 @@ class HomePage(tk.Frame):
             text="Welcome back!",
             font=("Arial", 28, "bold"),
             bg="#e9bb8d"
-        ).grid(row=0, column=0, padx=600, pady=(60, 20))
+        ).pack(anchor='center', pady=(75,40))
 
         # Subtitle
         tk.Label(
@@ -18,7 +18,7 @@ class HomePage(tk.Frame):
             text="Use the navigation menu on the left to get started.",
             font=("Arial", 16),
             bg="#e9bb8d"
-        ).grid(row=1, column=0, padx=30, pady=10)
+        ).pack(anchor='center')
 
         # Description / Instructions
         instructions = (
@@ -35,4 +35,4 @@ class HomePage(tk.Frame):
             font=("Arial", 14),
             bg="#e9bb8d",
             justify="left"
-        ).grid(row=2, column=0, padx=30, pady=20)
+        ).pack(anchor='center')

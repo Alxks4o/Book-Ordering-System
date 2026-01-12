@@ -65,11 +65,11 @@ class PlaceOrderPage(tk.Frame):
 
         #Quantity Label 
         quantity_label = tk.Label(self, text="Quantity", font=("Arial", 15), bg="#e9bb8d")
-        quantity_label.grid(row=3, column=0, padx=30, pady=10, sticky='w', columnspan=2)
+        quantity_label.grid(row=5, column=0, padx=30, pady=10, sticky='w', columnspan=2)
 
         #Quantity Entry
         quantity_entry = tk.Entry(self, font=("Arial", 15), width=10)
-        quantity_entry.grid(row=4, column=0, padx=30, pady=10, sticky='w')
+        quantity_entry.grid(row=6, column=0, padx=30, pady=10, sticky='w')
         
         '''
         Shipping Options - Checkbuttons for selecting shipping and urgent shipping options to make sure
@@ -78,14 +78,14 @@ class PlaceOrderPage(tk.Frame):
         def on_shipping_toggle():
             if self.shipping_var.get():
                 # Show urgent shipping checkbox and place order button below it
-                urgent_shipping_checkbox.grid(row=7, column=0, padx=30, pady=10, sticky='w')  
-                place_order_button.grid(row=8, column=0, columnspan=2, pady=30, sticky="w", padx=30)
-                refresh_button.grid(row=8, column=0, columnspan=2, pady=30, sticky="w", padx=220)
+                urgent_shipping_checkbox.grid(row=8, column=0, padx=30, pady=10, sticky='w')  
+                place_order_button.grid(row=10, column=0, columnspan=2, pady=30, sticky="w", padx=30)
+                refresh_button.grid(row=10, column=0, columnspan=2, pady=30, sticky="w", padx=220)
             else:
                 # Hide urgent shipping checkbox and move place order button up
                 urgent_shipping_checkbox.grid_remove()
-                place_order_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=30)
-                refresh_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=220)
+                place_order_button.grid(row=8, column=0, columnspan=2, pady=30, sticky="w", padx=30)
+                refresh_button.grid(row=8, column=0, columnspan=2, pady=30, sticky="w", padx=220)
 
 
 
@@ -105,7 +105,7 @@ class PlaceOrderPage(tk.Frame):
             offvalue=False,
             command=on_shipping_toggle
         )
-        shipping_checkbox.grid(row=6, column=0, padx=30, pady=10, sticky='w')
+        shipping_checkbox.grid(row=7, column=0, padx=30, pady=10, sticky='w')
 
         # Urgent Shipping Checkbutton Setup
         self.urgent_shipping_var = tk.BooleanVar(value=False)
@@ -125,11 +125,11 @@ class PlaceOrderPage(tk.Frame):
 
         #Place Order Button
         place_order_button = tk.Button(self, text="Place Order", font=("Arial", 15), bg="#ffd3ad", height=2, width=14, state="disabled") 
-        place_order_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=30)
+        place_order_button.grid(row=8, column=0, columnspan=2, pady=30, sticky="w", padx=30)
 
         # Refresh Button
         refresh_button = tk.Button(self, text="Refresh", font=("Arial", 15), bg="#ffd3ad", height=2, width=14)
-        refresh_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=220)
+        refresh_button.grid(row=8, column=0, columnspan=2, pady=30, sticky="w", padx=220)
 
         
 
@@ -139,11 +139,11 @@ class PlaceOrderPage(tk.Frame):
 
         # Customers Label        
         tk.Label(self, text=("Customers"), font=("Arial", 20, "bold"), bg="#e9bb8d") \
-            .grid(row=1, column=1, padx=30, pady=(20, 10))
+            .grid(row=3, column=0, padx=30, pady=(20, 10))
         
         # Customer frame
         customers_frame = tk.Frame(self, bg="#e9bb8d")
-        customers_frame.grid(row=2, column=1, padx=10, pady=10, sticky='e')
+        customers_frame.grid(row=4, column=0, padx=10, pady=10, sticky='e')
 
         customers_tree = ttk.Treeview(
             customers_frame,
