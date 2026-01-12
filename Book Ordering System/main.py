@@ -112,7 +112,7 @@ viewInvoices.grid(row=0, column=0, sticky='nsew')
 
 
 #show home page by default
-showFrame(viewInvoices)
+showFrame(home)
 
 
 #running the window
