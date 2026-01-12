@@ -48,13 +48,14 @@ class ViewInvoices(tk.Frame):
 
         invoices_tree = ttk.Treeview(
             invoices_frame,
-            columns=("order_id", "customer_name", "address", "book_title", "book_author", "quantity", "shipping_cost", "shipping_type", "total_price"),
+            columns=("order_id", "customer_name", "email", "address", "book_title", "book_author", "quantity", "shipping_cost", "shipping_type", "total_price"),
             show="headings",
             height=15
         )
 
         invoices_tree.heading("order_id", text="Order ID")
         invoices_tree.heading("customer_name", text="Customer Name")
+        invoices_tree.heading("email", text="Email")
         invoices_tree.heading("address", text="Address")
         invoices_tree.heading("book_title", text="Book Title")
         invoices_tree.heading("book_author", text="Book Author")
@@ -65,6 +66,7 @@ class ViewInvoices(tk.Frame):
 
         invoices_tree.column("order_id", width=80, anchor="center")
         invoices_tree.column("customer_name", width=150, anchor="center")
+        invoices_tree.column("email", width=200, anchor="center")
         invoices_tree.column("address", width=200, anchor="center")
         invoices_tree.column("book_title", width=150, anchor="center")
         invoices_tree.column("book_author", width=150, anchor="center")
@@ -121,40 +123,49 @@ class ViewInvoices(tk.Frame):
                 return "No Shipping" 
             
             
-        invoices = self.invoiceObj.getOrders()
 
         def clearTree():
             for item in invoices_tree.get_children():
                 invoices_tree.delete(item)
 
+        
         def searchInvoices():
             entry = search_bar.get().strip()
 
+            latest_invoices = self.invoiceObj.getOrders()
+
             if entry == placeholder or entry == "":
-                refreshTreeView(invoices)
+                refreshTreeView(latest_invoices)
                 return
             
             try:
                 target_id = int(entry)
             except ValueError:
-                refreshTreeView(invoices)
+                refreshTreeView(latest_invoices)
                 return
             
             matches = []
-            for invoice in invoices:
+            for invoice in latest_invoices:
                 if int(invoice['order_id']) == target_id:
                     matches.append(invoice)
 
             clearTree()
 
-            if matches:
-                refreshTreeView(matches)
-            else:
-                refreshTreeView([])
+            refreshTreeView(matches)
 
-    
-        search_btn = tk.Button(invoices_frame, text="Search", font=('Arial', 12), command=searchInvoices)
-        search_btn.grid(row=0, column=0, padx= 278, pady=10, sticky='w')
+
+        def validate_search_input(*args):
+            entry = search_bar.get().strip()
+            if entry.isdigit():
+                search_btn.config(state="normal")
+            else:
+                search_btn.config(state="disabled")
+
+        search_btn = tk.Button(invoices_frame, text="Search", font=('Arial', 12), bg= "#ffd3ad", fg ="#000000", command=searchInvoices)
+        search_btn.grid(row=0, column=0, padx=278, pady=10, sticky='w')
+
+        search_bar.bind("<KeyRelease>", validate_search_input)
+        validate_search_input()
 
         def refreshTreeView(invoices):
             try:
@@ -170,13 +181,13 @@ class ViewInvoices(tk.Frame):
                     else:
                         shipping_cost = 0
 
-
                     invoices_tree.insert(
                         "",
                         tk.END,
                         values=(
                             invoice["order_id"],
                             f"{invoice['customer_fname']} {invoice['customer_lname']}",
+                            invoice["email"],
                             invoice["address"],
                             invoice["book_title"],
                             invoice["book_author"],
@@ -192,13 +203,18 @@ class ViewInvoices(tk.Frame):
         def refreshInvoices():
             latest_invoices = self.invoiceObj.getOrders()
             refreshTreeView(latest_invoices)
+            if len(latest_invoices) == 0:
+                refresh_button.config(state="disabled")
+            else:
+                refresh_button.config(state="normal")
+        
 
         #Place Order Button
         refresh_button = tk.Button(self, text="Refresh", font=("Arial", 15), bg="#ffd3ad", height=2, width=14)
         refresh_button.grid(row=7, column=0, columnspan=2, pady=30, sticky="w", padx=30)
 
+        refreshInvoices()
         
         refresh_button.configure(command=refreshInvoices)
         
             
-        refreshTreeView(invoices)

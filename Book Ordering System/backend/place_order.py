@@ -16,30 +16,38 @@ class Order:
         base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
         
         # orders file path
-        self.orders_file_path = os.path.join(base_dir, "data", "orders.pkl")
+        self._orders_file_path = os.path.join(base_dir, "data", "orders.pkl")
 
         # books file path
-        self.books_file_path = os.path.join(base_dir, "data", "books.pkl")
+        self._books_file_path = os.path.join(base_dir, "data", "books.pkl")
 
         # initializing order attributes
-        self.__order_id = self.nextID()
+        self.__order_id = self.__nextID()
+        self.__book_id = book_id
+        self.__customer_id = customer_id
+        
         self._customer_firstname = fname
         self._customer_lastname = lname
         self._address = address
+        self._email = email
+
         self._book_title = book_title
         self._book_author = book_author
-        self.__book_id = book_id
-        self.__customer_id = customer_id
-        self._email = email
         self._quantity = quantity
+
         self._shipping = shipping
         self._urgent_shipping = urgent_shipping
         self._total_price = 0
 
     
     '''
-    Getters and Setters for order_id, book_id, and customer_id
+    Getters and Setters for order_id, book_id, customer_id and total_price
     '''
+
+    # Total Price
+    @property
+    def total_price(self):
+        return self._total_price
 
     # Order ID
 
@@ -77,10 +85,10 @@ class Order:
     '''
     Method to get the next available order ID, by checking the existing orders file.
     '''
-    def nextID(self):
+    def __nextID(self):
         #check if orders file exists and get the last order ID
-        if self.checkFileExists(self.orders_file_path):
-            with open(self.orders_file_path, "rb") as f: # open in read binary mode
+        if self.__checkFileExists(self._orders_file_path):
+            with open(self._orders_file_path, "rb") as f: # open in read binary mode
                 order = pickle.load(f)
                 if order:
                     return order[-1]["order_id"] + 1 # increment last order ID and add 1 to it 
@@ -90,17 +98,15 @@ class Order:
     '''
     Method to check if a file exists at the given path.
     '''
-    def checkFileExists(self, path):
+    def __checkFileExists(self, path):
         return os.path.isfile(path)
-
-
 
 
     '''
     Method to calculate the total price of the order, including shipping costs.
     '''
 
-    def calculateTotalPrice(self, unit_price):
+    def _calculateTotalPrice(self, unit_price):
 
         if self._shipping and not self._urgent_shipping: # standard shipping
             price = unit_price 
@@ -122,8 +128,8 @@ class Order:
     '''
 
     def getOrders(self):
-        if self.checkFileExists(self.orders_file_path): # check if orders file exists
-            with open(self.orders_file_path, "rb") as f:
+        if self.__checkFileExists(self._orders_file_path): # check if orders file exists
+            with open(self._orders_file_path, "rb") as f:
                 orders = pickle.load(f)
                 return orders # return list of orders
             
@@ -134,10 +140,10 @@ class Order:
     Method to update the stock quantity of the ordered book in the books file.
     '''
 
-    def updateQuantity(self):
+    def _updateQuantity(self):
         
         # read existing books from books file
-        with open(self.books_file_path, "rb") as f:
+        with open(self._books_file_path, "rb") as f:
             books = pickle.load(f)
         
         # update the quantity of the ordered book
@@ -149,23 +155,26 @@ class Order:
                 
                 book["quantity"] -= int(self._quantity) # reduce stock by ordered quantity
         
-        with open(self.books_file_path, "wb") as f:
+        with open(self._books_file_path, "wb") as f:
             pickle.dump(books, f) # write updated books back to file
         
         return True # return True if stock updated successfully
-     
-        
+    
     '''
-    Main method to place the order, update stock, and store order details.
+    Function to validate order data
     '''
-    def placeOrder(self):
-
-        # Check if stock is sufficient before placing the order
-        if not self.updateQuantity():
-            return "Order failed due to insufficient stock."
-
-        # Create order dictionary to store order details
-        order = {
+    def _validateOrderData(self):
+        if int(self._quantity) <= 0:
+            return "Quantity must be greater than 0"
+        if not isinstance(self._shipping, bool):
+            return "Shipping must be True or False"
+        return True
+    
+    '''
+    Structuring order format 
+    '''
+    def _formatOrder(self):
+        return {
             "order_id": self.__order_id,
             "customer_fname": self._customer_firstname,
             "customer_lname": self._customer_lastname,
@@ -179,18 +188,37 @@ class Order:
             "shipping": self._shipping,
             "total_price": self._total_price
         }
+
+    '''
+    Main method to place the order, update stock, and store order details.
+    '''
+    def placeOrder(self, unit_price):
+        self._calculateTotalPrice(unit_price) # calculating price of book
+
+        # validate order data before creating order 
+        validation = self._validateOrderData()
+        if validation is not True:
+            return validation # returns error message 
+        
+
+        # Check if stock is sufficient before placing the order
+        if not self._updateQuantity():
+            return "Order failed due to insufficient stock."
+
+        # Create order dictionary to store order details
+        order = self._formatOrder()
         
         # Read existing orders, append the new order, and write back to file
 
-        if self.checkFileExists(self.orders_file_path):
-            with open(self.orders_file_path, "rb") as f:
+        if self.__checkFileExists(self._orders_file_path):
+            with open(self._orders_file_path, "rb") as f:
                 data = pickle.load(f) # load existing orders
         else:
             data = [] # initialize empty list if no orders exist
         
         data.append(order) # add new order to list
 
-        with open(self.orders_file_path, "wb") as f:
+        with open(self._orders_file_path, "wb") as f:
             pickle.dump(data, f) # write updated orders back to file
 
         return "Order placed successfully!" # return success message

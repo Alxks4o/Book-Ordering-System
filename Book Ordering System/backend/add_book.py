@@ -73,9 +73,9 @@ class Book(Stock):
 
         #setting up file path for storing book data
         base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
-        self.file_path = os.path.join(base_dir, "data", "books.pkl") # book data file path
+        self._file_path = os.path.join(base_dir, "data", "books.pkl") # book data file path
 
-        self.__bookID = self.nextID() # Assigning a unique book ID
+        self.__bookID = self.__nextID() # Assigning a unique book ID
         self.__quantity = quantity # Quantity of the book in stock
 
     
@@ -103,14 +103,14 @@ class Book(Stock):
 
 
     #helper method to check if the data file exists
-    def checkFileExists(self):
-        return os.path.isfile(self.file_path) 
+    def __checkFileExists(self):
+        return os.path.isfile(self._file_path) 
 
     #method to generate the next unique book ID
-    def nextID(self):
+    def __nextID(self):
         try:        
-            if self.checkFileExists(): # checking if file exists
-                with open(self.file_path, "rb") as f:
+            if self.__checkFileExists(): # checking if file exists
+                with open(self._file_path, "rb") as f:
                     book = pickle.load(f) # loading existing book data
                     if book:
                         return book[-1]["ID"] + 1 # generating next ID based on last record
@@ -119,10 +119,10 @@ class Book(Stock):
             return 0 # in case of any error, start ID from 0
 
     def getBooks(self):
-        if not self.checkFileExists(): # checking if file exists
+        if not self.__checkFileExists(): # checking if file exists
             return [] # returning empty list if no file
         try:
-            with open(self.file_path, "rb") as f: # loading existing book data
+            with open(self._file_path, "rb") as f: # loading existing book data
                 books = pickle.load(f) 
             
             if isinstance(books, list): # checking if data is in list format
@@ -134,51 +134,62 @@ class Book(Stock):
             return [] # returning empty list in case of any error
 
     '''
+    Function for validating book data
+    '''
+    def _validateBookData(self):
+        # check data is valid
+        try:
+            int(self.price)
+            int(self.quantity)
+            return True # dadta is valid
+        except:
+            return False # data is invalid
+
+
+    '''
     Main method to create and save a new book record, returns success or error message.
     '''
     def createBook(self):
-        data_valid = False # flag to track data validity
-
         #validating price and quantity inputs
-        try:
-            int(self.price) 
-            data_valid = True
-        except:
-            return "Price must be a number!"
+        if not self._validateBookData():
+            return "Invalid Book Data"
         
-        # validating quantity input
-        try:
-            int(self.quantity)
-            data_valid = True
-        except:
-            return "Quantity must be an integer!"
 
         # If all data is valid, proceed to create and save the book record
-        if  data_valid:          
-            book = {
-                "ID": self.bookID,
-                "title": self.title,
-                "author": self.author,
-                "isbn": self.isbn,
-                "price": float(self.price),
-                "quantity": int(self.quantity)
-            }
 
-            if self.checkFileExists():
-                with open(self.file_path, "rb") as f: # loading existing book data
-                    data = pickle.load(f)
+        # Build book dictionary
+        book = {
+            "ID": self.bookID,
+            "title": self.title,
+            "author": self.author,
+            "isbn": self.isbn,
+            "price": float(self.price),
+            "quantity": int(self.quantity)
+        }
 
-                if not isinstance(data, list): # checking if data is in list format
-                    data = []
-            else:
-                data = [] # initializing empty list if file does not exist
 
-            data.append(book) # adding new book record
+        # Load existing data or create a new list 
 
-            with open(self.file_path, "wb") as f:
-                pickle.dump(data, f) # saving updated book data
+        if self.__checkFileExists():
+            with open(self._file_path, "rb") as f: # loading existing book data
+                data = pickle.load(f)
 
-            return "Book added successfully!" # success message
+            if not isinstance(data, list): # checking if data is in list format
+                data = []
+        else:
+            data = [] # initializing empty list if file does not exist
+
+        
+        # add new book 
+
+        data.append(book) 
+
+        # saving book to file
+        
+        with open(self._file_path, "wb") as f:
+            pickle.dump(data, f) 
+
+        return "Book added successfully!" # success message
 
 
 

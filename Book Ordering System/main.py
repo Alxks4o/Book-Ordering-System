@@ -1,4 +1,5 @@
 import tkinter as tk
+import os
 
 #importing backend modules
 from backend.add_customer import Customer
@@ -8,6 +9,15 @@ import pages.AddPage as AddCustomer
 import pages.Homepage as HomepageFunc
 import pages.PlaceOrderPage as PlaceOrderFunc
 import pages.ViewInvoices as ViewInvoicesFunc
+
+
+# setting up file path 
+current_dir = os.path.dirname(__file__)
+
+# logo filepath
+window_logo_filepath = os.path.join(current_dir, "assets", "window-logo.ico")
+
+nav_logo_filepath = os.path.join(current_dir, "assets", "nav-logo.png")
 
 
 # Function to switch frames
@@ -20,6 +30,8 @@ window = tk.Tk()
 #setting window size
 window.geometry("1000x900")
 window.minsize(1000, 900)
+window.iconbitmap(window_logo_filepath) # setting logo
+window.title("Book Ordering System")
 
 #setting window grid configuration
 window.rowconfigure(0, weight=1)
@@ -34,14 +46,24 @@ NAVIGATION - This is where the navigation buttons will go
 navigation = tk.Frame(window, bg='#ffe9d6')
 navigation.grid(row=0, column=0, sticky='ns')
 
+nav_logo = tk.PhotoImage(file=nav_logo_filepath).subsample(4, 4) # logo size
+
+# logo style 
+logo_label = tk.Label(navigation, image=nav_logo, bg="#ffe9d6")
+logo_label.image = nav_logo
+logo_label.pack(side="bottom", pady=20)
+
+nav_label = tk.Label(navigation, text="Book Ordering System", font=("Arial", 18, "bold"), bg="#ffe9d6", fg="#202020"
+).pack(fill='x', padx=15, pady=(10,50))
 
 
 #buttons quick design 
 button_style = {
-    "font": ("Arial", 14),
+    "font": ("Arial", 14, "bold"),
     "height": 2,
     "width": 14,
-    "bg": "#ffd3ad"
+    "bg": "#ffd3ad",
+    "fg": "#202020"
 }
 
 #HOME PAGE
@@ -50,7 +72,7 @@ homeButton = tk.Button(
     **button_style,
     text= "Home",
     command=lambda: showFrame(home)
-).pack(fill='x')
+).pack(fill='x', padx=30, pady=8)
 
 
 #button for adding customers 
@@ -59,25 +81,25 @@ addCustomerButton = tk.Button(
     **button_style,
     text= "Add",
     command=lambda: showFrame(add)
-).pack(fill='x')
+).pack(fill='x', padx=30, pady=8)
 
 
 #button for placing orders 
 placeOrderButton = tk.Button(
     navigation,
     **button_style,
-    text= "Place Order",
+    text= "Order",
     command=lambda: showFrame(placeOrder)
-).pack(fill='x')
+).pack(fill='x', padx=30, pady=8)
 
 
 #button for viewing invoices 
 viewInvoicesButton = tk.Button(
     navigation,
     **button_style,
-    text= "View Invoices",
+    text= "Invoices",
     command=lambda: showFrame(viewInvoices)
-).pack(fill='x')
+).pack(fill='x', padx=30, pady=8)
 
 
 

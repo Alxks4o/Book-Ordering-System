@@ -47,28 +47,28 @@ class AddPage(tk.Frame):
         tk.Label(add_customer_tab, text="First Name", font=("Arial", 15), bg="#e9bb8d")\
             .grid(row=1, column=0, sticky="w", padx=50, pady=10)
 
-        self.first_name_entry = tk.Entry(add_customer_tab, font=("Arial", 15))
+        self.first_name_entry = tk.Entry(add_customer_tab, font=("Arial", 15), width=30)
         self.first_name_entry.grid(row=2, column=0, padx=50, pady=10)
 
         # Last Name Label
         tk.Label(add_customer_tab, text="Last Name", font=("Arial", 15), bg="#e9bb8d")\
             .grid(row=3, column=0, columnspan=2, sticky="w", padx=50, pady=10)
 
-        self.last_name_entry = tk.Entry(add_customer_tab, font=("Arial", 15))
+        self.last_name_entry = tk.Entry(add_customer_tab, font=("Arial", 15), width=30)
         self.last_name_entry.grid(row=4, column=0, padx=50, pady=10)
 
         # Email Label
         tk.Label(add_customer_tab, text="Email", font=("Arial", 15), bg="#e9bb8d")\
             .grid(row=5, column=0, sticky="w", padx=50, pady=10)
 
-        self.email_entry = tk.Entry(add_customer_tab, font=("Arial", 15))
+        self.email_entry = tk.Entry(add_customer_tab, font=("Arial", 15), width=30)
         self.email_entry.grid(row=6, column=0, padx=50, pady=10)
 
         # Address Label
         tk.Label(add_customer_tab, text="Address", font=("Arial", 15), bg="#e9bb8d")\
             .grid(row=7, column=0, sticky="w", padx=50, pady=10)
 
-        self.address_entry = tk.Entry(add_customer_tab, font=("Arial", 15))
+        self.address_entry = tk.Entry(add_customer_tab, font=("Arial", 15), width=30)
         self.address_entry.grid(row=8, column=0, padx=50, pady=10)
 
         # Message Label
@@ -76,10 +76,10 @@ class AddPage(tk.Frame):
         self.message_label_user.grid(row=9, column=0, columnspan=2, pady=10)
 
         # Buttons
-        tk.Button(add_customer_tab, text="Add Customer", font=("Arial", 15), command=self.addCustomerFunc)\
-            .grid(row=10, column=0, sticky="nws", padx=50, pady=20)
+        tk.Button(add_customer_tab, text="Add Customer", font=("Arial", 15), bg= "#ffd3ad", fg ="#000000", command=self.addCustomerFunc)\
+            .grid(row=10, column=0, sticky="nes", padx=130, pady=20)
 
-        tk.Button(add_customer_tab, text="Clear", font=("Arial", 15), command=self.clearCustomerEntries)\
+        tk.Button(add_customer_tab, text="Clear", font=("Arial", 15), bg= "#ffd3ad", fg ="#000000", command=self.clearCustomerEntries)\
             .grid(row=10, column=0, sticky="nes", padx=50, pady=20)
 
 
@@ -101,45 +101,47 @@ class AddPage(tk.Frame):
         tk.Label(add_book_tab, text="Title", font=("Arial", 15), bg="#e9bb8d")\
             .grid(row=1, column=0, sticky="w", padx=50, pady=10)
 
-        self.title_entry = tk.Entry(add_book_tab, font=("Arial", 15))
+        self.title_entry = tk.Entry(add_book_tab, font=("Arial", 15), width=30)
         self.title_entry.grid(row=2, column=0, padx=50, pady=10)
 
         # Author Label
         tk.Label(add_book_tab, text="Author", font=("Arial", 15), bg="#e9bb8d")\
             .grid(row=3, column=0, sticky="w", padx=50, pady=10)
 
-        self.author_entry = tk.Entry(add_book_tab, font=("Arial", 15))
+        self.author_entry = tk.Entry(add_book_tab, font=("Arial", 15), width=30)
         self.author_entry.grid(row=4, column=0, padx=50, pady=10)
 
         # ISBN Label
         tk.Label(add_book_tab, text="ISBN", font=("Arial", 15), bg="#e9bb8d")\
             .grid(row=5, column=0, sticky="w", padx=50, pady=10)
 
-        self.isbn_entry = tk.Entry(add_book_tab, font=("Arial", 15))
+        self.isbn_entry = tk.Entry(add_book_tab, font=("Arial", 15), width=30)
         self.isbn_entry.grid(row=6, column=0, padx=50, pady=10)
 
         # Price Label
         tk.Label(add_book_tab, text="Price", font=("Arial", 15), bg="#e9bb8d")\
             .grid(row=7, column=0, sticky="w", padx=50, pady=10)
 
-        self.price_entry = tk.Entry(add_book_tab, font=("Arial", 15))
+        self.price_entry = tk.Entry(add_book_tab, font=("Arial", 15), width=30)
         self.price_entry.grid(row=8, column=0, padx=50, pady=10)
 
         # Quantity Label
         tk.Label(add_book_tab, text="Quantity", font=("Arial", 15), bg="#e9bb8d")\
             .grid(row=9, column=0, sticky="w", padx=50, pady=10)
 
-        self.quantity_entry = tk.Entry(add_book_tab, font=("Arial", 15))
+        self.quantity_entry = tk.Entry(add_book_tab, font=("Arial", 15), width=30)
         self.quantity_entry.grid(row=10, column=0, padx=50, pady=10)
 
         # Message Label
         self.message_label_book = tk.Label(add_book_tab, text="", font=("Arial", 12), bg="#e9bb8d")
         self.message_label_book.grid(row=11, column=0, columnspan=2, pady=10)
 
-        # Buttons
-        tk.Button(add_book_tab, text="Add Book", font=("Arial", 15), command=self.addBookFunc)\
-            .grid(row=12, column=0, sticky="nws", padx=50, pady=20)
-        tk.Button(add_book_tab, text="Clear", font=("Arial", 15), command=self.clearBookEntries)\
+        # Add Button
+        tk.Button(add_book_tab, text="Add Book", font=("Arial", 15), bg= "#ffd3ad", fg ="#000000", command=self.addBookFunc)\
+            .grid(row=12, column=0, sticky="nes", padx=130, pady=20)
+        
+        # Clear Button
+        tk.Button(add_book_tab, text="Clear", font=("Arial", 15), bg= "#ffd3ad", fg ="#000000", command=self.clearBookEntries)\
             .grid(row=12, column=0, sticky="nes", padx=50, pady=20)
 
 
