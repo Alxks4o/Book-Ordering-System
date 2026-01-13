@@ -54,7 +54,7 @@ class ViewInvoices(tk.Frame):
             invoices_frame,
             columns=("order_id", "customer_name", "email", "address", "book_title", "book_author", "quantity", "shipping_type", "total_price"),
             show="headings",
-            height=35
+            height=25
         )
 
 
