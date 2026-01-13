@@ -23,7 +23,7 @@ class PlaceOrderPage(tk.Frame):
 
         #Books Section
         tk.Label(self, text=("Books"), font=("Arial", 20, "bold"), bg="#e9bb8d") \
-            .grid(row=1, column=0, padx=30, pady=(20, 10))
+            .grid(row=1, column=0, padx=30, pady=(20, 10), sticky='w')
 
         
         '''
@@ -32,7 +32,7 @@ class PlaceOrderPage(tk.Frame):
 
         # Book frame 
         books_frame = tk.Frame(self, bg="#e9bb8d")
-        books_frame.grid(row=2, column=0, padx=30, pady=10, sticky='w')
+        books_frame.grid(row=2, column=0, padx=30, pady=10, sticky='nesw')
 
         books_tree = ttk.Treeview(
             books_frame,
@@ -50,8 +50,8 @@ class PlaceOrderPage(tk.Frame):
 
         #Column configurations
         books_tree.column("id", width=60, anchor="center")
-        books_tree.column("title", width=160, anchor="center")
-        books_tree.column("author", width=160, anchor="center")
+        books_tree.column("title", width=200, anchor="center")
+        books_tree.column("author", width=200, anchor="center")
         books_tree.column("price", width=100, anchor="center")
         books_tree.column("quantity", width=100, anchor="center")
 
@@ -139,11 +139,11 @@ class PlaceOrderPage(tk.Frame):
 
         # Customers Label        
         tk.Label(self, text=("Customers"), font=("Arial", 20, "bold"), bg="#e9bb8d") \
-            .grid(row=3, column=0, padx=30, pady=(20, 10))
+            .grid(row=3, column=0, padx=30, pady=(20, 10), sticky='w')
         
         # Customer frame
         customers_frame = tk.Frame(self, bg="#e9bb8d")
-        customers_frame.grid(row=4, column=0, padx=10, pady=10, sticky='e')
+        customers_frame.grid(row=4, column=0, padx=30, pady=10, sticky='nesw')
 
         customers_tree = ttk.Treeview(
             customers_frame,
