@@ -28,8 +28,8 @@ def showFrame(frame):
 window = tk.Tk()
 
 #setting window size
-window.geometry("1000x900")
-window.minsize(1000, 900)
+window.geometry("600x700")
+window.minsize(600, 700)
 window.iconbitmap(window_logo_filepath) # setting logo
 window.title("Book Ordering System")
 

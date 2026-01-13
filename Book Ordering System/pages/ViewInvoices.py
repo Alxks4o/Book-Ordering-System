@@ -66,14 +66,14 @@ class ViewInvoices(tk.Frame):
 
         invoices_tree.column("order_id", width=80, anchor="center")
         invoices_tree.column("customer_name", width=150, anchor="center")
-        invoices_tree.column("email", width=200, anchor="center")
-        invoices_tree.column("address", width=200, anchor="center")
+        invoices_tree.column("email", width=150, anchor="center")
+        invoices_tree.column("address", width=150, anchor="center")
         invoices_tree.column("book_title", width=150, anchor="center")
         invoices_tree.column("book_author", width=150, anchor="center")
         invoices_tree.column("quantity", width=80, anchor="center")
-        invoices_tree.column("shipping_cost", width=100, anchor="center")
+        invoices_tree.column("shipping_cost", width=70, anchor="center")
         invoices_tree.column("shipping_type", width=120, anchor="center")
-        invoices_tree.column("total_price", width=100, anchor="center")
+        invoices_tree.column("total_price", width=70, anchor="center")
 
         y_scroll = ttk.Scrollbar(
             invoices_frame,
@@ -82,12 +82,8 @@ class ViewInvoices(tk.Frame):
         )
         invoices_tree.configure(yscrollcommand=y_scroll.set)
 
-        x_scroll = ttk.Scrollbar(invoices_frame, orient='horizontal', command=invoices_tree.xview)
-        invoices_tree.configure(xscrollcommand=x_scroll.set)
-
         invoices_tree.grid(row=1 , column=0, columnspan=2, sticky='nesw')
         y_scroll.grid(row=1, column=2, sticky='ns')
-        x_scroll.grid(row=2, column=0, columnspan=2, sticky='ew')
 
 
             

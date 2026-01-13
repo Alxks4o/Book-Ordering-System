@@ -78,9 +78,7 @@ class PlaceOrderPage(tk.Frame):
         def on_shipping_toggle():
             if self.shipping_var.get():
                 # Show urgent shipping checkbox and place order button below it
-                urgent_shipping_checkbox.grid(row=8, column=0, padx=30, pady=10, sticky='w')  
-                place_order_button.grid(row=10, column=0, columnspan=2, pady=30, sticky="w", padx=30)
-                refresh_button.grid(row=10, column=0, columnspan=2, pady=30, sticky="w", padx=220)
+                urgent_shipping_checkbox.grid(row=7, column=0, padx=250, pady=10, sticky='w')  
             else:
                 # Hide urgent shipping checkbox and move place order button up
                 urgent_shipping_checkbox.grid_remove()
