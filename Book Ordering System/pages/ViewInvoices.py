@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
+#importing backend modules
 from backend.place_order import Order
 from backend.add_book import Book
 
@@ -58,7 +59,7 @@ class ViewInvoices(tk.Frame):
         )
 
 
-        # HEADINGS # 
+        # HEADINGS 
 
         invoices_tree.heading("order_id", text="Order ID")
         invoices_tree.heading("customer_name", text="Customer Name")
@@ -72,7 +73,7 @@ class ViewInvoices(tk.Frame):
 
 
         
-        # COLUMNS #
+        # COLUMNS 
 
         invoices_tree.column("order_id", width=80, anchor="center")
         invoices_tree.column("customer_name", width=150, anchor="center")
