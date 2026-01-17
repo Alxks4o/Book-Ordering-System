@@ -127,11 +127,12 @@ class ViewInvoices(tk.Frame):
             standard_calc = (invoice['total_price'] - 2) / invoice['quantity'] # standard 
             urgent_calc = (invoice['total_price'] - 5) / invoice['quantity'] # urgent
 
+
             if  invoice['shipping'] and standard_calc ==  book_price: # standard shipping
                 return "Standard"
             elif invoice['shipping'] and urgent_calc == book_price: # urgent shipping
                 return "Urgent"
-            else: #no shipping
+            else: # no shipping
                 return "No Shipping" 
             
             
@@ -191,7 +192,7 @@ class ViewInvoices(tk.Frame):
                 clearTree() # clear table
                 for invoice in invoices:
                     shipping_type = get_shipping_type(invoice) 
-
+                    
                     # layout of values being enterd inside of the treeview 
                     invoices_tree.insert(
                         "",
@@ -217,10 +218,7 @@ class ViewInvoices(tk.Frame):
         def refreshInvoices():
             latest_invoices = self.invoiceObj.getOrders() # get latest orders
             refreshTreeView(latest_invoices) 
-            if len(latest_invoices) == 0:
-                refresh_button.config(state="disabled") # no invoices, disable refresh button 
-            else:
-                refresh_button.config(state="normal") # invoices exist, enable refresh button 
+   
         
 
         #Place Order Button

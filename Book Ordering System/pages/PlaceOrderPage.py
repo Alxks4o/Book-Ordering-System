@@ -244,7 +244,7 @@ class PlaceOrderPage(tk.Frame):
             # Create a new window for the invoice
             win = tk.Toplevel()
             win.title("Invoice")
-            win.geometry("500x450")
+            win.geometry("500x550")
             # win.iconbitmap()
             win.resizable(False, False)
             win.configure(bg="#ececec")
@@ -265,20 +265,35 @@ class PlaceOrderPage(tk.Frame):
             # Display shipping costs if applicable
             if use_shipping and not urgent_shipping:
                 # shipping only
+                tk.Label(win, text=f"Subtotal: £{((orderObj.total_price)-2):.2f}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
                 tk.Label(win, text=f"Shipping: £2.00", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20) 
             elif use_shipping and urgent_shipping:
                 # urgent shipping
+                tk.Label(win, text=f"Subtotal: £{((orderObj.total_price)-5):.2f}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
                 tk.Label(win, text=f"Shipping: £5.00", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
 
             tk.Label(win, text=f"Total Price: £{orderObj.total_price:.2f}", font=("Arial", 15), bg="#ececec").pack(anchor="w", padx=20)
             tk.Button(win, text="Close", width=20, height=2, font=("Arial", 15), bg="#7b7b7b", command=win.destroy).pack(pady=50)
 
+        def getBookPrice(bookID):
+            refreshAll()
+            self.bookObj = Book("", "", "", 0, 0)
+            latest_books = self.bookObj.getBooks()
+
+            for book in latest_books:
+                if book["ID"] == int(bookID):
+                    try:
+                        return float(book["price"])
+                    except (ValueError, TypeError):
+                        return None  # or raise a custom error
+
+            return None  # book not found
 
         '''
         Function to handle placing an order when the "Place Order" button is clicked, including input validation and order processing. 
         '''
         def place_order():
-
+            
             # Get selected book, customer, quantity, and shipping options
             book_sel = books_tree.focus()
             cust_sel = customers_tree.focus()
@@ -316,12 +331,7 @@ class PlaceOrderPage(tk.Frame):
             # Getting quantity as an integer
             quantity = int(qty_text)
 
-            # Fetch book price from the books list
-            book_price = 0
-            for book in books:
-                if book["ID"] == int(book_id): # match book ID
-                    book_price = book["price"] # get price
-                    break
+            book_price = getBookPrice(book_id)
 
             # Creating an Order object and placing the order
             orderObj = Order(book_id, customer_id, customer_firstname, customer_lastname, address, book_title, book_author, email, quantity, shipping, urgent_shipping)

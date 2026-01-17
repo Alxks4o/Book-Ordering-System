@@ -139,7 +139,7 @@ class Book(Stock):
     def _validateBookData(self):
         # check data is valid
         try:
-            int(self.price)
+            float(self.price)
             int(self.quantity)
             return True # dadta is valid
         except:
