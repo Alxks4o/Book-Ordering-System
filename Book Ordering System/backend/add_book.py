@@ -59,29 +59,12 @@ class Stock:
     def price(self, price):
         self._price = price
     
+class ID:
+    def __init__(self):
+        base_dir = os.path.dirname(os.path.dirname(__file__))
+        self._file_path = os.path.join(base_dir, "data", "books.pkl")
 
-
-'''
-Book Class - child class of Stock, represents a book in the inventory. Handles book-specific attributes and methods for managing book records.
-'''
-
-class Book(Stock):
-
-    #setting up attributes
-    def __init__(self, title, author, isbn, price, quantity):
-        super().__init__(title, author, isbn, price)
-
-        #setting up file path for storing book data
-        base_dir = os.path.dirname(os.path.dirname(__file__))  # project root
-        self._file_path = os.path.join(base_dir, "data", "books.pkl") # book data file path
-
-        self.__bookID = self.__nextID() # Assigning a unique book ID
-        self.__quantity = quantity # Quantity of the book in stock
-
-    
-    #Getters and Setters - to access and modify private attributes
-
-    # Book ID
+        self.__bookID = self.__nextID()
 
     @property
     def bookID(self):
@@ -90,6 +73,45 @@ class Book(Stock):
     @bookID.setter
     def bookID(self, bookID):
         self.__bookID = bookID
+
+
+    #helper method to check if the data file exists
+    def __checkFileExists(self):
+        return os.path.isfile(self._file_path) 
+
+
+    #method to generate the next unique book ID
+    def __nextID(self):
+        try:        
+            if self.__checkFileExists(): # checking if file exists
+                with open(self._file_path, "rb") as f:
+                    book = pickle.load(f) # loading existing book data
+                    if book:
+                        return book[-1]["ID"] + 1 # generating next ID based on last record
+            return 0 # starting ID from 0 if no records exist
+        except:
+            return 0 # in case of any error, start ID from 0
+        
+
+
+        
+'''
+Book Class - child class of Stock, represents a book in the inventory. Handles book-specific attributes and methods for managing book records.
+'''
+
+class Book(Stock, ID):
+
+    def __init__(self, title, author, isbn, price, quantity):
+        Stock.__init__(self, title, author, isbn, price)
+        ID.__init__(self)
+
+        base_dir = os.path.dirname(os.path.dirname(__file__))
+        self._file_path = os.path.join(base_dir, "data", "books.pkl")
+
+        self.__quantity = quantity
+    
+    
+    # Getters and Setters - to access and modify private attributes
 
     # Quantity
 
@@ -106,17 +128,7 @@ class Book(Stock):
     def __checkFileExists(self):
         return os.path.isfile(self._file_path) 
 
-    #method to generate the next unique book ID
-    def __nextID(self):
-        try:        
-            if self.__checkFileExists(): # checking if file exists
-                with open(self._file_path, "rb") as f:
-                    book = pickle.load(f) # loading existing book data
-                    if book:
-                        return book[-1]["ID"] + 1 # generating next ID based on last record
-            return 0 # starting ID from 0 if no records exist
-        except:
-            return 0 # in case of any error, start ID from 0
+
 
     def getBooks(self):
         if not self.__checkFileExists(): # checking if file exists
